@@ -1,0 +1,31 @@
+{
+  "welcome": "Welcome!",
+  "loan_summary": "Loan Summary",
+  "total_debt": "Total Debt",
+  "remaining_debt": "Remaining Debt",
+  "settings":  {
+    "settings": "Settings",
+    "language": "Language",  
+    "close":"Close",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
+  } ,
+  "menu": {
+    "home":"Home",
+    "payments":"Payments",
+    "income":"Income",
+    "menu":"Menus",
+    "settings": {
+      "title": "Settings",
+      "description": "⚙️ Language, theme, and general settings"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "📊 Loan analyses, payment history"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "👤 User information and profile settings"
+    } 
+  }   
+}

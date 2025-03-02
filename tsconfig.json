@@ -1,11 +1,26 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true, 
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@guden-components": ["./src/components"],
+      "@guden-screens": ["./src/screens"],
+      "@guden-navigation": ["./src/navigation"],
+      "@guden-utils": ["./src/utils"],
+      "@guden-assets": ["./src/assets"],
+      "@guden-constants": ["./src/constants"],
+      "@guden-hooks": ["./src/hooks"],
+      "@guden-services": ["./src/services"],
+      "@guden-types": ["./src/types"],
+      "@guden-styles": ["./src/styles"],
+      "@guden-theme": ["./theme"], 
+      "@guden-locales":["./src/locales"],
+      "@guden-sections":["./src/sections"],
+      "@guden-layout":["./src/layout"],
+      "@guden-pages":["./app"]
     }
   },
   "include": [
@@ -13,5 +28,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+  ] 
 }

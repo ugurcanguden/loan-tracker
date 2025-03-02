@@ -1,0 +1,31 @@
+{
+  "welcome": "Hoşgeldiniz!",
+  "loan_summary": "Kredi Özeti",
+  "total_debt": "Toplam Borç",
+  "remaining_debt": "Kalan Borç",
+  "settings":  {
+    "settings": "Ayarlar",
+    "language": "Dil",  
+    "close":"Kapat",
+    "dark_mode": "Karanlık Mod",
+    "light_mode": "Aydınlık Mod"
+  },
+  "menu": {
+    "home":"Ana Sayfa",
+    "payments":"Ödemeler",
+    "income":"Gelirler",
+    "menu":"Menü",
+    "settings":{
+      "title": "Ayarlar",
+      "description": "⚙️ Dil, tema ve genel ayarlar"
+    },
+    "reports": {
+      "title": "Raporlar",
+      "description": "📊 Kredi analizleri, ödeme geçmişi"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "👤 Kullanıcı bilgileri ve profil ayarları"
+    }     
+  }  
+}
