@@ -1,11 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "module": "esnext",
+    "jsx": "react-native",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "strict": true, 
+    "strict": true,
     "paths": {
       "@guden-components": ["./src/components"],
       "@guden-screens": ["./src/screens"],
@@ -17,12 +18,12 @@
       "@guden-services": ["./src/services"],
       "@guden-types": ["./src/types"],
       "@guden-styles": ["./src/styles"],
-      "@guden-theme": ["./theme"], 
-      "@guden-locales":["./src/locales"],
-      "@guden-sections":["./src/sections"],
-      "@guden-layout":["./src/layout"],
-      "@guden-pages":["./app"],
-      "@guden-models":["./src/models"]
+      "@guden-theme": ["./theme"],
+      "@guden-locales": ["./src/locales"],
+      "@guden-sections": ["./src/sections"],
+      "@guden-layout": ["./src/layout"],
+      "@guden-pages": ["./app"],
+      "@guden-models": ["./src/models"]
     }
   },
   "include": [
@@ -30,5 +31,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ] 
+  ]
 }

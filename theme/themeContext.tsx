@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-import { DarkTheme, DefaultTheme, Theme } from '@react-navigation/native';
+import { Theme, darkTheme, lightTheme } from './theme';
 
 // Context için TypeScript tipi oluştur
 interface ThemeContextType {
@@ -12,13 +12,13 @@ interface ThemeContextType {
 export const ThemeContext = createContext<ThemeContextType>({
   isDarkMode: false,
   setIsDarkMode: () => {},
-  theme: DefaultTheme,
+  theme: lightTheme,
 });
 
 // Theme Provider Bileşeni
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const theme = isDarkMode ? DarkTheme : DefaultTheme;
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode, theme }}>

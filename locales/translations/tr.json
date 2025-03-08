@@ -1,5 +1,5 @@
 {
-  "common":{
+  "common": {
     "cancel": "İptal",
     "save": "Kaydet",
     "delete": "Sil",
@@ -13,28 +13,37 @@
     "success": "Başarılı",
     "warning": "Uyarı",
     "info": "Bilgi",
-    "confirmDelete": "Bu öğeyi silmek istediğinizden emin misiniz?" ,
+    "confirmDelete": "Bu öğeyi silmek istediğinizden emin misiniz?",
     "deleteTitle": "Silme İşlemi",
-    "deleteMessage": "Bu öğeyi silmek istediğinizden emin misiniz?"
-    
+    "deleteMessage": "Bu öğeyi silmek istediğinizden emin misiniz?",
+    "mandatoryFields": "Lütfen zorunlu alanları doldurun",
+    "saveError": "Kaydetme sırasında bir hata oluştu"
+  },
+  "validation": {
+    "nameRequired": "İsim alanı zorunludur",
+    "amountRequired": "Tutar 0'dan büyük olmalıdır",
+    "installmentsRequired": "Taksit sayısı en az 1 olmalıdır"
   },
   "welcome": "Hoşgeldiniz!",
   "loan_summary": "Kredi Özeti",
   "total_debt": "Toplam Borç",
   "remaining_debt": "Kalan Borç",
-  "settings":  {
+  "settings": {
     "settings": "Ayarlar",
-    "language": "Dil",  
-    "close":"Kapat",
+    "language": "Dil",
+    "close": "Kapat",
     "dark_mode": "Karanlık Mod",
-    "light_mode": "Aydınlık Mod"
+    "light_mode": "Aydınlık Mod",
+    "theme": "Tema",
+    "theme_settings": "Tema Ayarları",
+    "theme_description": "Uygulama temasını özelleştirin"
   },
   "menu": {
-    "home":"Ana Sayfa",
-    "payments":"Ödemeler",
-    "income":"Gelirler",
-    "menu":"Menü",
-    "settings":{
+    "home": "Ana Sayfa",
+    "payments": "Ödemeler",
+    "income": "Gelirler",
+    "menu": "Menü",
+    "settings": {
       "title": "Ayarlar",
       "description": "⚙️ Dil, tema ve genel ayarlar"
     },
@@ -46,20 +55,64 @@
       "title": "Profil",
       "description": "👤 Kullanıcı bilgileri ve profil ayarları"
     }
-   },
-    "payment": {
-      "title": "📜 Ödemeler",
-      "name": "🏦 Ödeme Adı",
-      "startDate": "📅  Başlangıç Tarihi",
-      "recurring": "Tekrarlayan",
-      "months": "ay",
-      "deleteMessage": "Bu ödemeyi silmek istediğinizden emin misiniz?", 
-      "amount": "Tutar", 
-      "placeholderName": "Ödeme adı (Örn: Kredi, Fatura)",
-      "placeholderAmount": "Tutar girin",
-      "addTitle": "Ödeme Ekle",
-      "installment-count": "Taksit Sayısı",
-      "detailTitle": "Ödeme Detayları" 
-    }   
-   
+  },
+  "payment": {
+    "title": "Krediler & Ödemeler",
+    "addTitle": "Yeni Kredi/Ödeme Ekle",
+    "editTitle": "Kredi/Ödeme Düzenle",
+    "detailTitle": "Kredi/Ödeme Detayı",
+    "name": "Kredi/Ödeme Adı",
+    "amount": "Ana Para",
+    "startDate": "Başlangıç Tarihi",
+    "recurring": "Taksitli Ödeme",
+    "months": "ay",
+    "installment-count": "Taksit Sayısı",
+    "interest-rate": "Faiz Oranı (%)",
+    "description": "Açıklama",
+    "total-amount": "Toplam Tutar",
+    "monthly-payment": "Aylık Taksit",
+    "total-payment": "Toplam Geri Ödeme",
+    "total-paid": "Toplam Ödenen",
+    "total-remaining": "Kalan Tutar",
+    "payment-chart": "Ödeme Grafiği",
+    "installments": "Taksitler",
+    "installment": "Taksit",
+    "payment-method": "Ödeme Yöntemi",
+    "payment-date": "Ödeme Tarihi",
+    "due-date": "Vade Tarihi",
+    "remaining-balance": "Kalan Ana Para",
+    "status": "Durum",
+    "paid": "Ödendi",
+    "unpaid": "Ödenmedi",
+    "overdue": "Gecikmiş",
+    "mark-as-paid": "Ödendi İşaretle",
+    "unmark-as-paid": "Ödemeyi Geri Al",
+    "marked-as-paid": "Ödeme başarıyla kaydedildi",
+    "unmarked-as-paid": "Ödeme başarıyla geri alındı",
+    "unmark-title": "Ödeme İptal Onayı",
+    "unmark-message": "Bu ödemeyi geri almak istediğinizden emin misiniz?",
+    "paid-on": "Ödenme Tarihi",
+    "notes": "Notlar",
+    "summary": "Kredi Özeti",
+    "statistics": "İstatistikler",
+    "deleteMessage": "Bu ödemeyi silmek istediğinizden emin misiniz?",
+    "placeholderName": "Örn: Konut Kredisi",
+    "placeholderAmount": "Kredi tutarını girin",
+    "placeholderInstallment": "Taksit sayısını girin",
+    "placeholderInterest": "Yıllık faiz oranını girin",
+    "placeholderDescription": "Kredi hakkında notlar ekleyin",
+    "placeholderPaymentMethod": "Örn: Havale, EFT, Nakit",
+    "placeholderNotes": "Ödeme ile ilgili notlar"
+  },
+  "dashboard": {
+    "title": "Gösterge Paneli",
+    "total-loans": "Toplam Kredi",
+    "active-loans": "Aktif Krediler",
+    "completed-loans": "Tamamlanan Krediler",
+    "total-debt": "Toplam Borç",
+    "monthly-payment": "Aylık Ödeme",
+    "overdue-payments": "Geciken Ödemeler",
+    "next-payment": "Sonraki Ödeme",
+    "payment-calendar": "Ödeme Takvimi"
+  }
 }

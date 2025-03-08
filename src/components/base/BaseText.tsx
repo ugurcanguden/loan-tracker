@@ -7,6 +7,6 @@ export interface BaseTextProps extends TextProps {
 export const BaseText = (props: BaseTextProps) => {
     const { theme } = useThemeContext();
     return (
-        <Text style={{ color: theme.colors.text }}  {...props}>{props.text}</Text>
+        <Text {...props} style={[props.style, { color: theme.colors.text }]} >{props.text}</Text>
     )
 }

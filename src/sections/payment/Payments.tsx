@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, View, StyleSheet, Alert, Modal } from 'react-native';
-import { BaseScrollView, BaseText } from '@guden-components';
+import { AmountDisplay, BaseScrollView, BaseText } from '@guden-components';
 import { PaymentService } from '@guden-services';
 import { Payment } from '@guden-models';
 import { ConvertDateToString, DateFormat } from 'guden-core';
@@ -24,6 +24,7 @@ export default function Payments() {
 
     const fetchPayments = async () => {
         const data = await getPayments();
+        console.log("data", data);
         setPayments(data);
     };
 
@@ -69,7 +70,7 @@ export default function Payments() {
         <TouchableOpacity onPress={() => handlePaymentPress(item)} style={[styles.card, { backgroundColor: theme.colors.card }]}>
             <View style={styles.cardHeader}>
                 <BaseText text={`${getTranslation("payment.name")}: ${item.name}`} style={[styles.paymentName, { color: theme.colors.text }]} />
-                <BaseText text={`💰 ${item.amount} TL`} style={[styles.amount, { color: theme.colors.primary }]} />
+                <AmountDisplay amount={item.amount} />
             </View>
             <BaseText text={`${getTranslation("payment.startDate")}: ${convertDate(item.startDate)}`} style={[styles.date, { color: theme.colors.text }]} />
             {item.isRecurring === 1 && (
@@ -77,7 +78,7 @@ export default function Payments() {
                     text={`🔄 ${item.installments} ${getTranslation("payment.months")}`}
                 />
             )}
-            <TouchableOpacity onPress={() => handleDelete(item.id!)} style={[styles.deleteButton, { backgroundColor: theme.colors.primary }]}>
+            <TouchableOpacity onPress={() => handleDelete(item.id!)} style={[styles.deleteButton, { backgroundColor: theme.colors.notification }]}>
                 <Ionicons name="trash-outline" size={20} color="white" />
                 <BaseText text={getTranslation("common.delete")} style={styles.deleteText} />
             </TouchableOpacity>

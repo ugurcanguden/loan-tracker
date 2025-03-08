@@ -1,6 +1,6 @@
 {
   "common": {
-    "cancel": "cancel",
+    "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
@@ -15,7 +15,14 @@
     "info": "Info",
     "confirmDelete": "Are you sure you want to delete this item?",
     "deleteTitle": "Delete Operation",
-    "deleteMessage": "Are you sure you want to delete this item?"
+    "deleteMessage": "Are you sure you want to delete this item?",
+    "mandatoryFields": "Please fill in the required fields",
+    "saveError": "An error occurred while saving"
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "amountRequired": "Amount must be greater than 0",
+    "installmentsRequired": "Installments must be at least 1"
   },
   "welcome": "Welcome!",
   "loan_summary": "Loan Summary",
@@ -26,13 +33,16 @@
     "language": "Language",
     "close": "Close",
     "dark_mode": "Dark Mode",
-    "light_mode": "Light Mode"
+    "light_mode": "Light Mode",
+    "theme": "Theme",
+    "theme_settings": "Theme Settings",
+    "theme_description": "Customize application theme"
   },
   "menu": {
     "home": "Home",
     "payments": "Payments",
     "income": "Income",
-    "menu": "Menus",
+    "menu": "Menu",
     "settings": {
       "title": "Settings",
       "description": "⚙️ Language, theme, and general settings"
@@ -47,17 +57,62 @@
     }
   },
   "payment": {
-    "title": "📜 Payments",
-    "name": "🏦 Payment Name",
-    "startDate": "📅 Start Date",
-    "recurring": "Recurring",
+    "title": "Loans & Payments",
+    "addTitle": "Add New Loan/Payment",
+    "editTitle": "Edit Loan/Payment",
+    "detailTitle": "Loan/Payment Details",
+    "name": "Loan/Payment Name",
+    "amount": "Principal Amount",
+    "startDate": "Start Date",
+    "recurring": "Installment Payment",
     "months": "months",
-    "deleteMessage": "Are you sure you want to delete this payment?", 
-    "amount": "Amount", 
-    "placeholderName": "Payment name (e.g., Loan, Bill)",
-    "placeholderAmount": "Enter amount",
-    "addTitle": "Add Payment",
-    "installment-count": "Installment Count",
-    "detailTitle": "Payment Detail"
+    "installment-count": "Number of Installments",
+    "interest-rate": "Interest Rate (%)",
+    "description": "Description",
+    "total-amount": "Total Amount",
+    "monthly-payment": "Monthly Payment",
+    "total-payment": "Total Repayment",
+    "total-paid": "Total Paid",
+    "total-remaining": "Remaining Amount",
+    "payment-chart": "Payment Chart",
+    "installments": "Installments",
+    "installment": "Installment",
+    "payment-method": "Payment Method",
+    "payment-date": "Payment Date",
+    "due-date": "Due Date",
+    "remaining-balance": "Remaining Principal",
+    "status": "Status",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "mark-as-paid": "Mark as Paid",
+    "unmark-as-paid": "Unmark Payment",
+    "marked-as-paid": "Payment successfully recorded",
+    "unmarked-as-paid": "Payment successfully unmarked",
+    "unmark-title": "Unmark Payment Confirmation",
+    "unmark-message": "Are you sure you want to unmark this payment?",
+    "paid-on": "Paid on",
+    "notes": "Notes",
+    "summary": "Loan Summary",
+    "statistics": "Statistics",
+    "deleteMessage": "Are you sure you want to delete this payment?",
+    "placeholderName": "Ex: Home Loan",
+    "placeholderAmount": "Enter loan amount",
+    "placeholderInstallment": "Enter number of installments",
+    "placeholderInterest": "Enter annual interest rate",
+    "placeholderDescription": "Add notes about the loan",
+    "placeholderPaymentMethod": "Ex: Wire Transfer, Cash",
+    "placeholderNotes": "Add notes about the payment"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "total-loans": "Total Loans",
+    "active-loans": "Active Loans",
+    "completed-loans": "Completed Loans",
+    "total-debt": "Total Debt",
+    "monthly-payment": "Monthly Payment",
+    "overdue-payments": "Overdue Payments",
+    "next-payment": "Next Payment",
+    "payment-calendar": "Payment Calendar"
   }
 }
