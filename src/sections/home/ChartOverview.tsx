@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { 
   BaseText, 
   BaseView, 
@@ -92,11 +92,13 @@ export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
 
   const renderChart = () => {
     const data = activeTab === 0 ? incomeChartData : expenseChartData;
+    const screenWidth = Dimensions.get("window").width;
+    const chartWidth = screenWidth - (Platform.OS === 'ios' ? 48 : 40);
     
     return (
       <BarChart
         data={data}
-        width={Dimensions.get("window").width - 64}
+        width={chartWidth}
         height={220}
         chartConfig={chartConfig}
         style={styles.chart}
@@ -166,48 +168,73 @@ export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
 
   const styles = StyleSheet.create({
     container: {
-      margin: 16,
+      margin: Platform.OS === 'ios' ? 16 : 12,
       marginBottom: 8,
+      borderRadius: 12,
+      ...Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+        },
+        android: {
+          elevation: 2,
+        },
+      }),
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       marginBottom: 16,
+      paddingHorizontal: 16,
+      paddingTop: 16,
     },
     title: {
       flex: 1,
+      marginRight: 16,
     },
     refreshButton: {
-      marginLeft: 8,
+      width: 44,
+      height: 44,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 22,
     },
     tabs: {
       marginBottom: 16,
+      paddingHorizontal: 16,
     },
     chartContainer: {
       borderRadius: 8,
-      padding: 8,
+      padding: Platform.OS === 'ios' ? 12 : 8,
+      marginHorizontal: 16,
     },
     chart: {
       marginVertical: 8,
+      borderRadius: 8,
     },
     summary: {
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
       marginTop: 16,
+      marginHorizontal: 16,
       paddingTop: 16,
       borderTopWidth: 1,
       borderTopColor: 'rgba(0, 0, 0, 0.1)',
     },
     summaryItem: {
       alignItems: 'center',
+      flex: 1,
+      paddingHorizontal: 8,
     },
     summaryRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
-      gap: 16,
+      gap: Platform.OS === 'ios' ? 16 : 12,
       marginTop: 4,
     },
     balanceText: {
