@@ -1,6 +1,5 @@
-import { BaseScrollView } from '@guden-components';
-import { LoanSummary } from '@guden-sections';
+import { Home } from "../../src/sections/home/Home";
 
 export const HomeScreen = () => {
-  return (<BaseScrollView><LoanSummary/></BaseScrollView>);
+  return (<Home/>);
 } 
