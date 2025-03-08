@@ -1,9 +1,8 @@
-import { BaseText, BaseScrollView } from "@guden-components"
+import { Incomes } from "@guden-sections"
 
 export const IncomeScreen = () => {
     return (
-        <BaseScrollView>
-            <BaseText text='Income' />
-        </BaseScrollView>
+        <Incomes> 
+        </Incomes>
     )
 }

@@ -1,39 +1,37 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  AmountDisplay,
-  BaseAlert,
-  BaseDatePicker,
-  BaseFlatList,
-  BaseModal,
+import { useEffect, useState } from "react";
+import { StyleSheet, ScrollView, Dimensions, Alert } from "react-native";
+import { 
   BaseText,
-  BaseTouchable,
   BaseView,
+  BaseTouchable,
+  BaseFlatList,
+  BaseAlert,
+  BaseModal,
+  BaseDatePicker,
+  AmountDisplay,
+  PageLayout,
   BaseDescription,
   DescriptionItemProps,
 } from "@guden-components";
-import { BasePage } from "@guden-hooks";
-import { Payment, PaymentSummary } from "@guden-models";
-import { PaymentService } from "@guden-services";
-import { useThemeContext } from "@guden-theme";
+import { IncomeService } from "@guden-services";
+import { Income, IncomeSummary } from "@guden-models";
 import { ConvertDateToString, DateFormat } from "guden-core";
-import { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native";
-import { PageLayout } from "../../components/layout/PageLayout";
-import { PaymentDetailPage } from "./PaymentDetail";
-import PaymentForm from "./PaymentForm";
+import { BasePage } from "@guden-hooks";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useThemeContext } from "@guden-theme";
+import IncomeForm from "./IncomeForm"; 
 
-const SCREEN_HEIGHT = Dimensions.get("window").height;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-export default function Payments() {
+export  function Incomes() {
   const { theme } = useThemeContext();
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [summary, setSummary] = useState<PaymentSummary | null>(null);
+  const [incomes, setIncomes] = useState<Income[]>([]);
+  const [summary, setSummary] = useState<IncomeSummary | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const { getPayments, deletePayment, getPaymentSummary } = PaymentService();
+  const { getIncomes, deleteIncome, getIncomeSummary } = IncomeService();
   const { getTranslation } = BasePage();
 
   useEffect(() => {
@@ -42,22 +40,15 @@ export default function Payments() {
 
   const fetchData = async () => {
     try {
-      const paymentsData = await getPayments(
-        startDate || undefined,
-        endDate || undefined
-      );
-      const summaryData = await getPaymentSummary(
-        startDate || undefined,
-        endDate || undefined
-      );
-      setPayments(paymentsData);
+      const [incomesData, summaryData] = await Promise.all([
+        getIncomes(startDate || undefined, endDate || undefined),
+        getIncomeSummary(startDate || undefined, endDate || undefined)
+      ]);
+      setIncomes(incomesData);
       setSummary(summaryData);
     } catch (error) {
-      console.error("Veriler getirilirken hata:", error);
-      Alert.alert(
-        getTranslation("common.error"),
-        getTranslation("common.fetchError")
-      );
+      console.error('Veriler getirilirken hata:', error);
+      Alert.alert(getTranslation("common.error"), getTranslation("common.fetchError"));
     }
   };
 
@@ -67,37 +58,29 @@ export default function Payments() {
       getTranslation("common.deleteTitle"),
       getTranslation("common.deleteMessage"),
       async () => {
-        await deletePayment(id);
-        fetchData();
+        try {
+          await deleteIncome(id);
+          fetchData();
+        } catch (error) {
+          console.error('Gelir silinirken hata:', error);
+          Alert.alert(getTranslation("common.error"), getTranslation("common.deleteError"));
+        }
       }
     );
   };
 
-  const handleAddPayment = () => {
-    setSelectedPayment(null);
+  const handleAddIncome = () => {
     setIsModalVisible(true);
   };
 
-  const handleSavePayment = () => {
+  const handleSaveIncome = () => {
     fetchData();
     setIsModalVisible(false);
-  };
-
-  const handlePaymentPress = (payment: Payment) => {
-    setSelectedPayment(payment);
-    setIsModalVisible(true);
   };
 
   const convertDate = (date: string) => {
     const dateFormat = new Date(date);
     return ConvertDateToString(dateFormat, DateFormat.DDMMYYYYP);
-  };
-
-  const getStatusColor = (payment: Payment) => {
-    if (payment.isRecurring === 1) {
-      return "#4BB543"; // Yeşil - Taksitli
-    }
-    return theme.colors.primary; // Normal renk - Tek seferlik
   };
 
   const handleClearFilter = () => {
@@ -116,28 +99,24 @@ export default function Payments() {
       visible={isFilterModalVisible}
       onClose={() => setIsFilterModalVisible(false)}
       size="medium"
-      title={getTranslation("payment.filter.title")}
+      title={getTranslation("income.filter.title")}
     >
       <BaseView style={styles.filterContainer}>
         <BaseView style={styles.filterItem}>
-          <BaseText variant="label">
-            {getTranslation("payment.filter.startDate")}
-          </BaseText>
+          <BaseText variant="label">{getTranslation("income.filter.startDate")}</BaseText>
           <BaseDatePicker
             value={startDate}
             onChange={setStartDate}
-            placeholder={getTranslation("payment.filter.selectStartDate")}
+            placeholder={getTranslation("income.filter.selectStartDate")}
           />
         </BaseView>
 
         <BaseView style={styles.filterItem}>
-          <BaseText variant="label">
-            {getTranslation("payment.filter.endDate")}
-          </BaseText>
+          <BaseText variant="label">{getTranslation("income.filter.endDate")}</BaseText>
           <BaseDatePicker
             value={endDate}
             onChange={setEndDate}
-            placeholder={getTranslation("payment.filter.selectEndDate")}
+            placeholder={getTranslation("income.filter.selectEndDate")}
             minDate={startDate || undefined}
           />
         </BaseView>
@@ -149,7 +128,7 @@ export default function Payments() {
             onPress={handleClearFilter}
             style={styles.filterButton}
           >
-            <BaseText>{getTranslation("payment.filter.clear")}</BaseText>
+            <BaseText>{getTranslation("income.filter.clear")}</BaseText>
           </BaseTouchable>
 
           <BaseTouchable
@@ -158,22 +137,54 @@ export default function Payments() {
             onPress={handleApplyFilter}
             style={styles.filterButton}
           >
-            <BaseText>{getTranslation("payment.filter.apply")}</BaseText>
+            <BaseText>{getTranslation("income.filter.apply")}</BaseText>
           </BaseTouchable>
         </BaseView>
       </BaseView>
     </BaseModal>
   );
 
-  const renderItem = ({ item }: { item: Payment }) => (
-    <BaseTouchable
+  const SummarySection = () => {
+    const summaryItems = [
+      {
+        label: getTranslation("income.monthlyTotal"),
+        value: summary?.monthlyTotal || 0,
+        isCurrency: true
+      },
+      {
+        label: getTranslation("income.yearlyTotal"),
+        value: summary?.yearlyTotal || 0,
+        isCurrency: true
+      },
+      {
+        label: getTranslation("income.totalAmount"),
+        value: summary?.totalAmount || 0,
+        isCurrency: true
+      },
+      {
+        label: getTranslation("income.totalIncomes"),
+        value: summary?.totalIncomes || 0
+      }
+    ];
+
+    return (
+      <BaseView variant="card" padding="medium" style={styles.summaryContainer}>
+        <BaseText variant="title" weight="bold" style={styles.summaryTitle}>
+          {getTranslation("income.summary")}
+        </BaseText>
+        <BaseDescription items={summaryItems as DescriptionItemProps[]} column={2} />
+      </BaseView>
+    );
+  };
+
+  const renderItem = ({ item }: { item: Income }) => (
+    <BaseTouchable 
       variant="default"
-      onPress={() => handlePaymentPress(item)}
       style={styles.itemTouchable}
     >
       <BaseView
         variant="background"
-        padding="medium"
+        padding="medium" 
         borderRadius={15}
         style={styles.itemContainer}
       >
@@ -187,12 +198,6 @@ export default function Payments() {
             >
               {item.name}
             </BaseText>
-            <MaterialCommunityIcons
-              name={item.isRecurring === 1 ? "sync" : "cash"}
-              size={20}
-              color={getStatusColor(item)}
-              style={styles.typeIcon}
-            />
           </BaseView>
 
           <BaseView style={styles.detailsContainer}>
@@ -204,37 +209,26 @@ export default function Payments() {
                 style={styles.detailIcon}
               />
               <BaseText variant="body" style={styles.detailText}>
-                {convertDate(item.startDate)}
+                {convertDate(item.date)}
               </BaseText>
             </BaseView>
-
-            {item.isRecurring === 1 && (
-              <BaseView style={styles.detailRow}>
-                <MaterialCommunityIcons
-                  name="sync"
-                  size={16}
-                  color={theme.colors.text}
-                  style={styles.detailIcon}
-                />
-                <BaseText variant="body" style={styles.detailText}>
-                  {`${item.installments} ${getTranslation("payment.months")}`}
-                </BaseText>
-              </BaseView>
-            )}
           </BaseView>
         </BaseView>
 
         {/* Sağ taraf - Tutar ve Silme */}
         <BaseView style={styles.rightContent}>
-          <AmountDisplay amount={item.amount} currency="TL" />
+          <AmountDisplay 
+            amount={item.amount} 
+            currency="TL"
+          />
           <BaseTouchable
             variant="background"
             onPress={(e) => handleDelete(item.id!, e)}
             style={styles.deleteButton}
           >
-            <MaterialCommunityIcons
-              name="trash-can-outline"
-              size={20}
+            <MaterialCommunityIcons 
+              name="trash-can-outline" 
+              size={20} 
               color={theme.colors.error}
             />
           </BaseTouchable>
@@ -242,52 +236,6 @@ export default function Payments() {
       </BaseView>
     </BaseTouchable>
   );
-
-  const SummarySection = () => {
-    const summaryItems = [
-      {
-        label: getTranslation("payment.total-amount"),
-        value: summary?.totalAmount || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-paid"),
-        value: summary?.totalPaid || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-remaining"),
-        value: summary?.totalRemaining || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.monthly-payment"),
-        value: summary?.monthlyPayment || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-payments"),
-        value: summary?.totalPayments || 0,
-      },
-      {
-        label: getTranslation("payment.overdue-payments"),
-        value: summary?.overdueCount || 0,
-        textStyle: { color: theme.colors.error },
-      },
-    ];
-
-    return (
-      <BaseView variant="card" padding="medium" style={styles.summaryContainer}>
-        <BaseText variant="title" weight="bold" style={styles.summaryTitle}>
-          {getTranslation("payment.summary")}
-        </BaseText>
-        <BaseDescription
-          items={summaryItems as DescriptionItemProps[]}
-          column={2}
-        />
-      </BaseView>
-    );
-  };
 
   const styles = StyleSheet.create({
     container: {
@@ -306,6 +254,13 @@ export default function Payments() {
     modalContent: {
       flexGrow: 1,
       paddingBottom: 20,
+    },
+    summaryContainer: {
+      margin: 16,
+      marginBottom: 8,
+    },
+    summaryTitle: {
+      marginBottom: 16,
     },
     itemTouchable: {
       marginBottom: 12,
@@ -335,9 +290,6 @@ export default function Payments() {
       fontSize: 16,
       marginRight: 8,
     },
-    typeIcon: {
-      marginLeft: 4,
-    },
     detailsContainer: {
       marginTop: 4,
     },
@@ -363,8 +315,8 @@ export default function Payments() {
       padding: 6,
     },
     headerActions: {
-      flexDirection: "row",
-      justifyContent: "flex-end",
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
       gap: 8,
       paddingHorizontal: 16,
       paddingTop: 8,
@@ -376,28 +328,12 @@ export default function Payments() {
       marginBottom: 16,
     },
     filterActions: {
-      flexDirection: "row",
-      justifyContent: "flex-end",
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
       marginTop: 24,
     },
     filterButton: {
       marginLeft: 8,
-    },
-    summaryContainer: {
-      margin: 16,
-      marginBottom: 8,
-    },
-    summaryTitle: {
-      marginBottom: 16,
-    },
-    summaryGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      marginHorizontal: -8,
-    },
-    summaryItem: {
-      width: "50%",
-      padding: 8,
     },
   });
 
@@ -406,8 +342,8 @@ export default function Payments() {
       width: 40,
       height: 40,
       borderRadius: 20,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: theme.colors.background,
       borderWidth: 1,
       borderColor: theme.colors.border,
@@ -415,10 +351,10 @@ export default function Payments() {
   });
 
   return (
-    <PageLayout
-      title={getTranslation("payment.title")}
+    <PageLayout 
+      title={getTranslation("income.title")}
       showAddButton
-      onAddPress={handleAddPayment}
+      onAddPress={handleAddIncome}
       padding="none"
     >
       <BaseView style={styles.container}>
@@ -429,9 +365,9 @@ export default function Payments() {
             style={dynamicStyles.actionButton}
             onPress={() => setIsFilterModalVisible(true)}
           >
-            <MaterialCommunityIcons
-              name="filter-outline"
-              size={24}
+            <MaterialCommunityIcons 
+              name="filter-outline" 
+              size={24} 
               color={theme.colors.primary}
             />
           </BaseTouchable>
@@ -442,18 +378,18 @@ export default function Payments() {
             style={dynamicStyles.actionButton}
             onPress={fetchData}
           >
-            <MaterialCommunityIcons
-              name="refresh"
-              size={24}
+            <MaterialCommunityIcons 
+              name="refresh" 
+              size={24} 
               color={theme.colors.primary}
             />
           </BaseTouchable>
         </BaseView>
 
         <SummarySection />
-
+        
         <BaseFlatList
-          data={payments}
+          data={incomes}
           keyExtractor={(item) => item.id!.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.listContainer}
@@ -463,31 +399,17 @@ export default function Payments() {
 
       <BaseModal
         visible={isModalVisible}
-        onClose={() => {
-          setIsModalVisible(false);
-          fetchData();
-        }}
+        onClose={() => setIsModalVisible(false)}
         size={"large"}
         closeButtonSize={30}
-        title={
-          selectedPayment
-            ? getTranslation("payment.detailTitle")
-            : getTranslation("payment.addTitle")
-        }
+        title={getTranslation("income.addTitle")}
       >
-        <ScrollView
-          style={styles.modalScroll}
-          contentContainerStyle={styles.modalContent}
-        >
-          {selectedPayment ? (
-            <PaymentDetailPage payment={selectedPayment} />
-          ) : (
-            <PaymentForm onClosed={handleSavePayment} />
-          )}
+        <ScrollView style={styles.modalScroll} contentContainerStyle={styles.modalContent}>
+          <IncomeForm onClosed={handleSaveIncome} />
         </ScrollView>
       </BaseModal>
 
       <FilterModal />
     </PageLayout>
   );
-}
+} 

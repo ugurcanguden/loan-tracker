@@ -70,8 +70,8 @@
     "interest-rate": "Faiz Oranı (%)",
     "description": "Açıklama",
     "total-amount": "Toplam Tutar",
-    "monthly-payment": "Aylık Taksit",
-    "total-payment": "Toplam Geri Ödeme",
+    "monthly-payment": "Aylık Ödeme",
+    "total-payments": "Toplam Ödeme",
     "total-paid": "Toplam Ödenen",
     "total-remaining": "Kalan Tutar",
     "payment-chart": "Ödeme Grafiği",
@@ -85,6 +85,7 @@
     "paid": "Ödendi",
     "unpaid": "Ödenmedi",
     "overdue": "Gecikmiş",
+    "overdue-payments": "Gecikmiş Ödemeler",
     "mark-as-paid": "Ödendi İşaretle",
     "unmark-as-paid": "Ödemeyi Geri Al",
     "marked-as-paid": "Ödeme başarıyla kaydedildi",
@@ -102,7 +103,16 @@
     "placeholderInterest": "Yıllık faiz oranını girin",
     "placeholderDescription": "Kredi hakkında notlar ekleyin",
     "placeholderPaymentMethod": "Örn: Havale, EFT, Nakit",
-    "placeholderNotes": "Ödeme ile ilgili notlar"
+    "placeholderNotes": "Ödeme ile ilgili notlar",
+    "filter": {
+      "title": "Filtrele",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "apply": "Uygula",
+      "clear": "Temizle",
+      "selectStartDate": "Başlangıç tarihi seçin",
+      "selectEndDate": "Bitiş tarihi seçin"
+    }
   },
   "dashboard": {
     "title": "Gösterge Paneli",
@@ -114,5 +124,32 @@
     "overdue-payments": "Geciken Ödemeler",
     "next-payment": "Sonraki Ödeme",
     "payment-calendar": "Ödeme Takvimi"
+  },
+  "income": {
+    "title": "Gelirler",
+    "addTitle": "Yeni Gelir Ekle",
+    "name": "Gelir Adı",
+    "amount": "Tutar",
+    "date": "Tarih",
+    "description": "Açıklama",
+    "summary": "Gelir Özeti",
+    "monthlyTotal": "Aylık Toplam",
+    "yearlyTotal": "Yıllık Toplam",
+    "totalAmount": "Toplam Tutar",
+    "totalIncomes": "Toplam Gelir Sayısı",
+    "placeholderName": "Örn: Maaş, Kira Geliri",
+    "placeholderAmount": "Gelir tutarını girin",
+    "placeholderDescription": "Gelir hakkında notlar ekleyin",
+    "fetchError": "Gelirler getirilirken bir hata oluştu",
+    "deleteError": "Gelir silinirken bir hata oluştu",
+    "filter": {
+      "title": "Filtrele",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "apply": "Uygula",
+      "clear": "Temizle",
+      "selectStartDate": "Başlangıç tarihi seçin",
+      "selectEndDate": "Bitiş tarihi seçin"
+    }
   }
 }

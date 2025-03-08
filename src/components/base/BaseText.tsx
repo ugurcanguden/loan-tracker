@@ -22,7 +22,8 @@ export const BaseText: React.FC<BaseTextProps> = ({
                 return {
                     fontSize: 24,
                     lineHeight: 32,
-                    textAlign: 'center',
+                    textAlign: 'center', 
+                    borderRadius:80
                 };
             case 'subtitle':
                 return {
@@ -47,8 +48,10 @@ export const BaseText: React.FC<BaseTextProps> = ({
                 };
             default:
                 return {
+                    color: theme.text,
                     fontSize: 16,
                     lineHeight: 24,
+                    borderRadius:80
                 };
         }
     };

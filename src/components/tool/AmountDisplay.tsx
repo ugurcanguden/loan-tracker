@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StyleProp, TextStyle } from 'react-native';
 import { useThemeContext } from '@guden-theme';
 
 export interface AmountDisplayProps {
     prefixNode?: React.ReactNode;
     amount: number;
     currency?: string;
+    style?:any;
 }
 
-export const AmountDisplay: React.FC<AmountDisplayProps> = ({ prefixNode, amount, currency }) => {
+export const AmountDisplay: React.FC<AmountDisplayProps> = ({ prefixNode, amount, currency ,style}) => {
     const { theme } = useThemeContext();
     
     const formattedAmount = new Intl.NumberFormat('tr-TR', {
@@ -20,7 +21,7 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({ prefixNode, amount
     return (
         <View style={styles.container}>
             {prefixNode}
-            <Text style={[styles.amount, { color: theme.colors.text }]}>
+            <Text style={[styles.amount, { color: theme.colors.text }, style]}>
                 {formattedAmount} {currency ?? "₺"}
             </Text>
         </View>

@@ -2,8 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeContext } from '@guden-theme';
 import { View, ViewProps } from 'react-native';
-import { MENU_ITEMS } from '@guden-constants';
-import { SettingsButton } from '@guden-components';
+import { MENU_ITEMS } from '@guden-constants'; 
 import { useState } from 'react';
 import { BasePage } from '@guden-hooks';
 import MenuScreen from './MenuScreen';
@@ -11,8 +10,8 @@ import { HomeScreen } from '../../app/dashboard/home';
 import { IncomeScreen } from '../../app/dashboard/income';
 import { PaymentsScreen } from '../../app/dashboard/payments';
 import { ReportsScreen } from '../../app/dashboard/reports';
-import { SettingsScreen } from '../../app/dashboard/settings';
-
+import { SettingsScreen } from '../../app/dashboard/settings'; 
+import { SettingsButton } from '@guden-components';
 
 const Tab = createBottomTabNavigator();
 

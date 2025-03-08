@@ -102,7 +102,18 @@
     "placeholderInterest": "Enter annual interest rate",
     "placeholderDescription": "Add notes about the loan",
     "placeholderPaymentMethod": "Ex: Wire Transfer, Cash",
-    "placeholderNotes": "Add notes about the payment"
+    "placeholderNotes": "Add notes about the payment",
+    "filter": {
+      "title": "Filter",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "apply": "Apply",
+      "clear": "Clear",
+      "selectStartDate": "Select start date",
+      "selectEndDate": "Select end date"
+    },
+    "total-payments": "Total Payments",
+    "overdue-payments": "Overdue Payments"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -114,5 +125,32 @@
     "overdue-payments": "Overdue Payments",
     "next-payment": "Next Payment",
     "payment-calendar": "Payment Calendar"
+  },
+  "income": {
+    "title": "Income",
+    "addTitle": "Add New Income",
+    "name": "Income Name",
+    "amount": "Amount",
+    "date": "Date",
+    "description": "Description",
+    "summary": "Income Summary",
+    "monthlyTotal": "Monthly Total",
+    "yearlyTotal": "Yearly Total", 
+    "totalAmount": "Total Amount",
+    "totalIncomes": "Total Income Count",
+    "placeholderName": "Ex: Salary, Rental Income",
+    "placeholderAmount": "Enter income amount",
+    "placeholderDescription": "Add notes about the income",
+    "fetchError": "An error occurred while fetching incomes",
+    "deleteError": "An error occurred while deleting income",
+    "filter": {
+      "title": "Filter",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "apply": "Apply",
+      "clear": "Clear",
+      "selectStartDate": "Select start date",
+      "selectEndDate": "Select end date"
+    }
   }
 }

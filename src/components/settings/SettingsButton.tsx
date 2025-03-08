@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useThemeContext } from '@guden-theme';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function SettingsButton() {
+export  function SettingsButton() {
     const { isDarkMode, setIsDarkMode, theme } = useThemeContext();
     const { t, i18n } = useTranslation();
     const [modalVisible, setModalVisible] = useState(false);
