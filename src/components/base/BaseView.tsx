@@ -1,24 +1,26 @@
 import React from 'react';
-import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native';
+import { View, ViewProps, StyleSheet } from 'react-native';
 import { useThemeContext } from '../../../theme/themeContext';
-import { spacing } from '../../../theme/theme';
+import { spacing, shadows } from '../../../theme/theme';
 
-export interface BaseScrollViewProps extends ScrollViewProps {
-    variant?: 'default' | 'card';
+export interface BaseViewProps extends ViewProps {
+    variant?: 'default' | 'card' | 'elevated' | 'background';
     padding?: 'none' | 'small' | 'medium' | 'large';
     backgroundColor?: string;
-    showsHorizontalScrollIndicator?: boolean;
-    showsVerticalScrollIndicator?: boolean;
+    borderColor?: string;
+    borderWidth?: number;
+    borderRadius?: number;
 }
 
-export const BaseScrollView: React.FC<BaseScrollViewProps> = ({
+export const BaseView: React.FC<BaseViewProps> = ({
     children,
     style,
     variant = 'default',
     padding = 'none',
     backgroundColor,
-    showsHorizontalScrollIndicator = false,
-    showsVerticalScrollIndicator = false,
+    borderColor,
+    borderWidth,
+    borderRadius,
     ...props
 }) => {
     const { theme } = useThemeContext();
@@ -28,10 +30,24 @@ export const BaseScrollView: React.FC<BaseScrollViewProps> = ({
             case 'card':
                 return {
                     backgroundColor: backgroundColor || theme.colors.card,
+                    borderRadius: borderRadius || spacing.md,
+                    ...shadows.sm,
+                };
+            case 'elevated':
+                return {
+                    backgroundColor: backgroundColor || theme.colors.card,
+                    borderRadius: borderRadius || spacing.lg,
+                    ...shadows.md,
+                };
+            case 'background':
+                return {
+                    backgroundColor: backgroundColor || theme.colors.background,
+                    borderRadius: borderRadius || 0,
                 };
             default:
                 return {
                     backgroundColor: backgroundColor || theme.colors.background,
+                    borderRadius: borderRadius || 0,
                 };
         }
     };
@@ -53,17 +69,14 @@ export const BaseScrollView: React.FC<BaseScrollViewProps> = ({
         container: {
             ...getVariantStyle(),
             padding: getPaddingStyle(),
+            ...(borderColor && { borderColor }),
+            ...(borderWidth !== undefined && { borderWidth }),
         },
     });
 
     return (
-        <ScrollView
-            style={[styles.container, style]}
-            showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
-            showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-            {...props}
-        >
+        <View style={[styles.container, style]} {...props}>
             {children}
-        </ScrollView>
+        </View>
     );
-};
+}; 

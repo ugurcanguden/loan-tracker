@@ -1,26 +1,28 @@
 import React from 'react';
-import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native';
+import { FlatList, FlatListProps, StyleSheet } from 'react-native';
 import { useThemeContext } from '../../../theme/themeContext';
 import { spacing } from '../../../theme/theme';
 
-export interface BaseScrollViewProps extends ScrollViewProps {
+export interface BaseFlatListProps<T> extends Omit<FlatListProps<T>, 'style'> {
     variant?: 'default' | 'card';
     padding?: 'none' | 'small' | 'medium' | 'large';
     backgroundColor?: string;
+    contentContainerStyle?: any;
     showsHorizontalScrollIndicator?: boolean;
     showsVerticalScrollIndicator?: boolean;
+    style?: any;
 }
 
-export const BaseScrollView: React.FC<BaseScrollViewProps> = ({
-    children,
-    style,
+export const BaseFlatList = <T extends any>({
     variant = 'default',
     padding = 'none',
     backgroundColor,
+    contentContainerStyle,
     showsHorizontalScrollIndicator = false,
     showsVerticalScrollIndicator = false,
+    style,
     ...props
-}) => {
+}: BaseFlatListProps<T>) => {
     const { theme } = useThemeContext();
 
     const getVariantStyle = () => {
@@ -52,18 +54,19 @@ export const BaseScrollView: React.FC<BaseScrollViewProps> = ({
     const styles = StyleSheet.create({
         container: {
             ...getVariantStyle(),
+        },
+        content: {
             padding: getPaddingStyle(),
         },
     });
 
     return (
-        <ScrollView
+        <FlatList
             style={[styles.container, style]}
+            contentContainerStyle={[styles.content, contentContainerStyle]}
             showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
             showsVerticalScrollIndicator={showsVerticalScrollIndicator}
             {...props}
-        >
-            {children}
-        </ScrollView>
+        />
     );
-};
+}; 

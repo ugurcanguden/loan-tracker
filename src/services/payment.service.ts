@@ -118,6 +118,11 @@ export const PaymentService = () => {
             console.error('Ödeme eklenirken hata:', error);
             throw error;
         }
+        finally {
+            if (db) {
+                await db.closeAsync();
+            }
+        }
     };
 
     const getPayments = async (): Promise<PaymentWithStats[]> => {
@@ -142,6 +147,10 @@ export const PaymentService = () => {
         } catch (error) {
             console.error('Ödemeler getirilirken hata:', error);
             throw error;
+        }        finally {
+            if (db) {
+                await db.closeAsync();
+            }
         }
     };
 
@@ -165,6 +174,10 @@ export const PaymentService = () => {
         } catch (error) {
             console.error('Ödeme detayları getirilirken hata:', error);
             throw error;
+        }        finally {
+            if (db) {
+                await db.closeAsync();
+            }
         }
     };
 
@@ -179,6 +192,11 @@ export const PaymentService = () => {
             console.error('Taksit ödenmiş olarak işaretlenirken hata:', error);
             throw error;
         }
+        finally {
+            if (db) {
+                await db.closeAsync();
+            }
+        }
     };
 
     const unmarkInstallmentAsPaid = async (detailId: number) => {
@@ -191,6 +209,10 @@ export const PaymentService = () => {
         } catch (error) {
             console.error('Taksit ödenmemiş olarak işaretlenirken hata:', error);
             throw error;
+        }        finally {
+            if (db) {
+                await db.closeAsync();
+            }
         }
     };
 
@@ -201,6 +223,10 @@ export const PaymentService = () => {
         } catch (error) {
             console.error('Ödeme silinirken hata:', error);
             throw error;
+        }        finally {
+            if (db) {
+                await db.closeAsync();
+            }
         }
     };
 
@@ -230,6 +256,11 @@ export const PaymentService = () => {
         } catch (error) {
             console.error('Özet bilgiler getirilirken hata:', error);
             throw error;
+        }
+        finally {
+            if (db) {
+                await db.closeAsync();
+            }
         }
     };
 

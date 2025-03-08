@@ -1,15 +1,16 @@
 import i18next from 'i18next';
 
 export const validateAmount = (value: string): number => {
-    if (!value || value === '') return 0;
-    const parsedValue = parseFloat(value.replace(/[^0-9.]/g, ''));
-    return isNaN(parsedValue) ? 0 : parsedValue;
+    // Virgüllü sayıyı doğru şekilde parse et
+    const cleanValue = value.replace(/[^0-9,]/g, '').replace(',', '.');
+    const amount = parseFloat(cleanValue);
+    return isNaN(amount) ? 0 : amount;
 };
 
 export const validateInstallments = (value: string): number => {
-    if (!value || value === '') return 1;
+    if (!value || value === '') return 0;
     const parsedValue = parseInt(value.replace(/[^0-9]/g, ''));
-    return isNaN(parsedValue) || parsedValue < 1 ? 1 : parsedValue;
+    return isNaN(parsedValue) ? 0 : parsedValue;
 };
 
 export interface ValidationErrors {
@@ -34,7 +35,7 @@ export const validatePaymentForm = (
         errors.amount = i18next.t('validation.amountRequired');
     }
 
-    if (isRecurring && installments < 1) {
+    if (isRecurring && (installments < 1 || installments > 120)) {
         errors.installments = i18next.t('validation.installmentsRequired');
     }
 

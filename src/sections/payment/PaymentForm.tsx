@@ -1,20 +1,27 @@
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+    BaseAmountInput,
+    BaseDateInput,
+    BaseText,
+    BaseTextArea,
+    BaseTextInput,
+    BaseTouchable,
+    BaseView,
+    createCommonStyles
+} from '@guden-components';
 import { BasePage } from '@guden-hooks';
 import { Payment } from '@guden-models';
 import { PaymentService } from '@guden-services';
 import { useThemeContext } from '@guden-theme';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Platform, ScrollView, StyleProp, StyleSheet, Switch, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { AmountDisplay } from '@guden-components';
-import { ValidationErrors, validateAmount, validateInstallments, validatePaymentForm } from '../../utils/validations';
-import { createCommonStyles } from '../../components/common/styles';
-import { Theme, typography } from '../../../theme/theme';
+import { Alert, StyleSheet, Switch, View } from 'react-native';
+import { ValidationErrors, validatePaymentForm } from '../../utils/validations';
 
 export interface PaymentFormProps {
     onClosed: () => void;
 }
- 
+
 const formatDate = (date: Date): string => {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -29,26 +36,10 @@ const formatAmount = (amount: number): string => {
     });
 };
 
-const getTextInputStyle = (baseStyle: ViewStyle & TextStyle, hasError: boolean, errorStyle: ViewStyle, customStyle?: ViewStyle & TextStyle): TextStyle => {
-    return {
-        ...baseStyle,
-        ...(hasError ? errorStyle : {}),
-        ...(customStyle || {})
-    } as TextStyle;
-};
-
-const getTouchableStyle = (baseStyle: ViewStyle & TextStyle, hasError: boolean, errorStyle: ViewStyle, customStyle?: ViewStyle & TextStyle): ViewStyle => {
-    return {
-        ...baseStyle,
-        ...(hasError ? errorStyle : {}),
-        ...(customStyle || {})
-    } as ViewStyle;
-};
-
-export default function PaymentForm({onClosed}: PaymentFormProps) {
+export default function PaymentForm({ onClosed }: PaymentFormProps) {
     const { theme } = useThemeContext();
     const { addPayment } = PaymentService();
-    const { t } = useTranslation(); 
+    const { t } = useTranslation();
     const { getTranslation } = BasePage();
     const commonStyles = createCommonStyles(theme);
 
@@ -61,7 +52,6 @@ export default function PaymentForm({onClosed}: PaymentFormProps) {
     const [installments, setInstallments] = useState<number>(1);
     const [installmentsText, setInstallmentsText] = useState('1');
     const [description, setDescription] = useState('');
-    const [showDatePicker, setShowDatePicker] = useState(false);
     const [errors, setErrors] = useState<ValidationErrors>({});
 
     // Hesaplama state'leri
@@ -72,38 +62,44 @@ export default function PaymentForm({onClosed}: PaymentFormProps) {
         if (totalAmount > 0 && months > 0) {
             const monthly = totalAmount / months;
             setMonthlyPayment(parseFloat(monthly.toFixed(2)));
-        }
+        } 
     };
 
-    // Form değişikliklerinde hesaplama yap
-    const handleAmountChange = (value: string) => {
-        setAmountText(value);
-        const newAmount = validateAmount(value);
+    const handleAmountChange = (rawValue: string, formattedValue: string) => {
+        setAmountText(rawValue);
+        // Virgüllü sayıyı doğru şekilde parse et
+        const cleanValue = rawValue.replace(/[^0-9,]/g, '').replace(',', '.'); 
+        const newAmount = parseFloat(cleanValue)/100 || 0;
         setAmount(newAmount);
+        
         if (newAmount > 0 && isRecurring) {
             calculateMonthlyPayment(newAmount, installments);
         }
+        if (newAmount == 0 && isRecurring) {
+            setMonthlyPayment(0);
+        }
         if (errors.amount) {
-            setErrors((prev: ValidationErrors) => ({ ...prev, amount: undefined }));
+            setErrors(prev => ({ ...prev, amount: undefined }));
         }
     };
 
-    const handleInstallmentsChange = (value: string) => {
-        setInstallmentsText(value);
-        const newInstallments = validateInstallments(value);
+    const handleInstallmentChange = (increment: boolean) => {
+        const newInstallments = increment ? 
+            Math.min(installments + 1, 120) : 
+            Math.max(installments - 1, 1);
+        
         setInstallments(newInstallments);
+        setInstallmentsText(newInstallments.toString());
+
         if (amount > 0 && isRecurring) {
             calculateMonthlyPayment(amount, newInstallments);
-        }
-        if (errors.installments) {
-            setErrors((prev: ValidationErrors) => ({ ...prev, installments: undefined }));
         }
     };
 
     const handleNameChange = (value: string) => {
         setName(value);
         if (errors.name) {
-            setErrors((prev: ValidationErrors) => ({ ...prev, name: undefined }));
+            setErrors(prev => ({ ...prev, name: undefined }));
         }
     };
 
@@ -144,60 +140,68 @@ export default function PaymentForm({onClosed}: PaymentFormProps) {
             Alert.alert(getTranslation("common.success"));
             onClosed();
         } catch (error) {
+            console.log(error);
             Alert.alert(getTranslation("common.error"), getTranslation("common.saveError"));
         }
     };
 
+    const Header = () => (
+        <View style={styles.headerContainer}>
+            <BaseText variant="title" weight="bold" style={styles.headerTitle}>
+                {getTranslation("payment.addTitle")}
+            </BaseText>
+            <BaseTouchable
+                variant="outline"
+                onPress={onClosed}
+                style={styles.closeButton}
+            >
+                <Ionicons
+                    name="close-circle-outline"
+                    size={26}
+                    color={theme.colors.secondary}
+                />
+            </BaseTouchable>
+        </View>
+    );
+
     return (
-        <ScrollView style={commonStyles.container}>
-            <View style={commonStyles.card}>
+        
+            <BaseView variant="card" padding="medium" style={styles.formContainer}>
                 {/* Kredi Adı */}
-                <Text style={commonStyles.label}>{getTranslation("payment.name")}</Text>
-                <TextInput
-                    style={getTextInputStyle(commonStyles.input, !!errors.name, commonStyles.inputError)}
+                <BaseText variant="label">{getTranslation("payment.name")}</BaseText>
+                <BaseTextInput
                     value={name}
                     onChangeText={handleNameChange}
                     placeholder={getTranslation("payment.placeholderName")}
-                    placeholderTextColor={theme.placeholder}
+                    error={!!errors.name}
                 />
-                {errors.name && <Text style={commonStyles.errorText}>{errors.name}</Text>}
+                {errors.name && (
+                    <BaseText variant="error">{errors.name}</BaseText>
+                )}
 
                 {/* Toplam Tutar */}
-                <Text style={commonStyles.label}>{getTranslation("payment.amount")}</Text>
-                <TextInput
-                    style={getTextInputStyle(commonStyles.input, !!errors.amount, commonStyles.inputError)}
-                    keyboardType="numeric"
+                <BaseText variant="label">{getTranslation("payment.amount")}</BaseText>
+                <BaseAmountInput
                     value={amountText}
                     onChangeText={handleAmountChange}
                     placeholder={getTranslation("payment.placeholderAmount")}
-                    placeholderTextColor={theme.placeholder}
+                    error={!!errors.amount}
                 />
-                {errors.amount && <Text style={commonStyles.errorText}>{errors.amount}</Text>}
-
-                {/* Başlangıç Tarihi */}
-                <Text style={commonStyles.label}>{getTranslation("payment.startDate")}</Text>
-                <TouchableOpacity 
-                    onPress={() => setShowDatePicker(true)} 
-                    style={getTouchableStyle(commonStyles.input, false, commonStyles.inputError, { justifyContent: 'center' })}
-                >
-                    <Text style={commonStyles.text}>📆 {formatDate(startDate)}</Text>
-                </TouchableOpacity>
-
-                {showDatePicker && (
-                    <DateTimePicker
-                        value={startDate}
-                        mode="date"
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        onChange={(event, selectedDate) => {
-                            setShowDatePicker(Platform.OS === 'ios');
-                            if (selectedDate) setStartDate(selectedDate);
-                        }}
-                    />
+                {errors.amount && (
+                    <BaseText variant="error">{errors.amount}</BaseText>
                 )}
 
+                {/* Başlangıç Tarihi */}
+                <BaseText variant="label">{getTranslation("payment.startDate")}</BaseText>
+                <BaseDateInput
+                    value={startDate}
+                    onChange={setStartDate}
+                    format="dd/MM/yyyy"
+                />
+
                 {/* Taksitli Ödeme Seçeneği */}
-                <View style={[commonStyles.row, commonStyles.spaceBetween, commonStyles.marginBottom]}>
-                    <Text style={commonStyles.label}>{getTranslation("payment.recurring")}</Text>
+                <View style={styles.switchContainer}>
+                    <BaseText variant="label">{getTranslation("payment.recurring")}</BaseText>
                     <Switch
                         value={isRecurring}
                         onValueChange={handleRecurringChange}
@@ -207,63 +211,163 @@ export default function PaymentForm({onClosed}: PaymentFormProps) {
                 </View>
 
                 {isRecurring && (
-                    <View>
+                    <BaseView variant="card">
                         {/* Taksit Sayısı */}
-                        <Text style={commonStyles.label}>{getTranslation("payment.installment-count")}</Text>
-                        <TextInput
-                            style={getTextInputStyle(commonStyles.input, !!errors.installments, commonStyles.inputError)}
-                            keyboardType="numeric"
-                            value={installmentsText}
-                            onChangeText={handleInstallmentsChange}
-                            placeholder={getTranslation("payment.placeholderInstallment")}
-                            placeholderTextColor={theme.placeholder}
-                        />
-                        {errors.installments && <Text style={commonStyles.errorText}>{errors.installments}</Text>}
+                        <BaseText variant="label">{getTranslation("payment.installment-count")}</BaseText>
+                        <BaseView style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginVertical: 10,
+                            backgroundColor: theme.colors.background,
+                            borderRadius: 8,
+                            borderWidth: 1,
+                            borderColor: errors.installments ? theme.colors.error : theme.colors.border,
+                            padding: 8
+                        }}>
+                            <BaseTouchable
+                                variant="default"
+                                size="small"
+                                style={{
+                                    width: 36,
+                                    height: 36,
+                                    borderRadius: 18,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: installments <= 1 ? theme.colors.disabled : theme.colors.secondary,
+                                    opacity: installments <= 1 ? 0.5 : 1
+                                }}
+                                onPress={() => handleInstallmentChange(false)}
+                                disabled={installments <= 1}
+                            >
+                                <MaterialCommunityIcons 
+                                    name="minus" 
+                                    size={20} 
+                                    color="#FFFFFF"
+                                />
+                            </BaseTouchable>
+
+                            <BaseText 
+                                style={{
+                                    flex: 1,
+                                    textAlign: 'center',
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: theme.colors.text
+                                }}
+                            >
+                                {installments}
+                            </BaseText>
+
+                            <BaseTouchable
+                                variant="default"
+                                size="small"
+                                style={{
+                                    width: 36,
+                                    height: 36,
+                                    borderRadius: 18,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: installments >= 120 ? theme.colors.disabled : theme.colors.secondary,
+                                    opacity: installments >= 120 ? 0.5 : 1
+                                }}
+                                onPress={() => handleInstallmentChange(true)}
+                                disabled={installments >= 120}
+                            >
+                                <MaterialCommunityIcons 
+                                    name="plus" 
+                                    size={20} 
+                                    color="#FFFFFF"
+                                />
+                            </BaseTouchable>
+                        </BaseView>
+                        {errors.installments && (
+                            <BaseText variant="error">{errors.installments}</BaseText>
+                        )}
 
                         {/* Hesaplama Sonuçları */}
-                        <View style={[commonStyles.card, { backgroundColor: theme.background }]}>
-                            <View style={[commonStyles.row, commonStyles.spaceBetween, commonStyles.marginBottom]}>
-                                <Text style={commonStyles.text}>
+                        <BaseView style={styles.calculationContainer}  >
+                            <View style={styles.calculationRow}>
+                                <BaseText>
                                     {getTranslation("payment.monthly-payment")}:
-                                </Text>
-                                <Text style={[commonStyles.text, { fontWeight: typography.fontWeights.bold, color: theme.primary }]}>
+                                </BaseText>
+                                <BaseText weight="bold" style={{ color: theme.colors.primary }}>
                                     {formatAmount(monthlyPayment)} TL
-                                </Text>
+                                </BaseText>
                             </View>
-                            <View style={[commonStyles.row, commonStyles.spaceBetween]}>
-                                <Text style={commonStyles.text}>
+                            <View style={styles.calculationRow}>
+                                <BaseText>
                                     {getTranslation("payment.total-payment")}:
-                                </Text>
-                                <Text style={[commonStyles.text, { fontWeight: typography.fontWeights.bold, color: theme.primary }]}>
+                                </BaseText>
+                                <BaseText weight="bold" style={{ color: theme.colors.primary }}>
                                     {formatAmount(amount)} TL
-                                </Text>
+                                </BaseText>
                             </View>
-                        </View>
-                    </View>
+                        </BaseView>
+                    </BaseView>
                 )}
 
                 {/* Açıklama */}
-                <Text style={commonStyles.label}>{getTranslation("payment.description")}</Text>
-                <TextInput
-                    style={getTextInputStyle(commonStyles.input, false, commonStyles.inputError, { height: 100, textAlignVertical: 'top' })}
+                <BaseText variant="label">{getTranslation("payment.description")}</BaseText>
+                <BaseTextArea
                     value={description}
                     onChangeText={setDescription}
                     placeholder={getTranslation("payment.placeholderDescription")}
-                    placeholderTextColor={theme.placeholder}
-                    multiline
-                    numberOfLines={4}
+                    minHeight={100}
                 />
 
                 {/* Kaydet Butonu */}
-                <TouchableOpacity 
-                    onPress={onSave} 
-                    style={commonStyles.button}
+                <BaseTouchable
+                    onPress={onSave}
+                    variant="primary"
+                    size="large"
+                    style={styles.saveButton}
                 >
-                    <Text style={commonStyles.buttonText}>{getTranslation("common.save")}</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+                    <BaseText style={{ color: '#FFFFFF' }}>
+                        {getTranslation("common.save")}
+                    </BaseText>
+                </BaseTouchable>
+            </BaseView> 
     );
 }
+
+const styles = StyleSheet.create({
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    headerTitle: {
+        flex: 1,
+    },
+    closeButton: {
+        padding: 5,
+    },
+    formContainer: {
+        marginBottom: 20,
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+    },
+    calculationContainer: {
+        marginTop: 15,
+        padding: 10, 
+        borderRadius: 8,
+    },
+    calculationRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    saveButton: {
+        marginTop: 20,
+    }
+});
 
 

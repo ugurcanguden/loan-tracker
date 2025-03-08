@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { BaseView, BaseText } from '@guden-components';
 import { useTranslation } from 'react-i18next'; 
 import { useThemeContext } from '@guden-theme';
 
@@ -7,16 +7,28 @@ export function LoanSummary() {
   const { theme } = useThemeContext();
 
   return (
-    <View style={{ padding: 20, backgroundColor: theme.colors.background }}>
-      <Text style={{ color: theme.colors.text, fontSize: 20 }}>
+    <BaseView 
+      variant="card"
+      padding="large"
+    >
+      <BaseText 
+        variant="title"
+        weight="bold"
+        style={{ marginBottom: 15 }}
+      >
         {t('loan_summary')}
-      </Text>
-      <Text style={{ color: theme.colors.text }}>
+      </BaseText>
+      <BaseText 
+        variant="body"
+        style={{ marginBottom: 10 }}
+      >
         {t('total_debt')}: 120,000₺
-      </Text>
-      <Text style={{ color: theme.colors.text }}>
+      </BaseText>
+      <BaseText 
+        variant="body"
+      >
         {t('remaining_debt')}: 40,000₺
-      </Text>
-    </View>
+      </BaseText>
+    </BaseView>
   );
 }

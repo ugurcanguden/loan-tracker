@@ -3,7 +3,7 @@ import { BaseText, BaseTextProps } from "./BaseText";
 
 export {
     BaseText,
-    BaseScrollView
+    BaseScrollView 
 }
 export type {
     BaseTextProps,
