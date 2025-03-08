@@ -31,3 +31,9 @@ export type { BaseTextInputProps } from './BaseTextInput';
 export type { SelectOption } from './inputs/BaseSelectInput';
 export type { BaseModalProps } from './BaseModal';
 export type { DescriptionItemProps } from './BaseDescription';
+
+export * from './BaseText';
+export * from './BaseView';
+export * from './BaseDescription';
+export * from './BaseButton';
+export * from './BaseIcon';
