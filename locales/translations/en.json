@@ -190,6 +190,12 @@
     "balance-trend": "Balance Trend",
     "income-trend": "Income Trend",
     "payment-trend": "Payment Trend",
-    "no-upcoming-payments": "No upcoming payments"
+    "no-upcoming-payments": "No upcoming payments",
+    "income-expense-chart": "Income/Expense Chart",
+    "monthly": "Monthly",
+    "yearly": "Yearly", 
+    "income": "Income",
+    "expense": "Expense",
+    "balance": "Balance"
   }
 }

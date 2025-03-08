@@ -189,6 +189,12 @@
     "balance-trend": "Bakiye Trendi",
     "income-trend": "Gelir Trendi",
     "payment-trend": "Ödeme Trendi",
-    "no-upcoming-payments": "Yaklaşan ödeme bulunmuyor"
+    "no-upcoming-payments": "Yaklaşan ödeme bulunmuyor",
+    "income-expense-chart": "Gelir/Gider Grafiği",
+    "monthly": "Aylık",
+    "yearly": "Yıllık",
+    "income": "Gelir",
+    "expense": "Gider",
+    "balance": "Bakiye"
   }
 }
