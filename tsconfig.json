@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "module": "esnext",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -20,7 +21,8 @@
       "@guden-locales":["./src/locales"],
       "@guden-sections":["./src/sections"],
       "@guden-layout":["./src/layout"],
-      "@guden-pages":["./app"]
+      "@guden-pages":["./app"],
+      "@guden-models":["./src/models"]
     }
   },
   "include": [

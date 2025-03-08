@@ -1,4 +1,23 @@
 {
+  "common":{
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "add": "Ekle",
+    "yes": "Evet",
+    "no": "Hayır",
+    "confirm": "Onayla",
+    "close": "Kapat",
+    "error": "Hata",
+    "success": "Başarılı",
+    "warning": "Uyarı",
+    "info": "Bilgi",
+    "confirmDelete": "Bu öğeyi silmek istediğinizden emin misiniz?" ,
+    "deleteTitle": "Silme İşlemi",
+    "deleteMessage": "Bu öğeyi silmek istediğinizden emin misiniz?"
+    
+  },
   "welcome": "Hoşgeldiniz!",
   "loan_summary": "Kredi Özeti",
   "total_debt": "Toplam Borç",
@@ -26,6 +45,21 @@
     "profile": {
       "title": "Profil",
       "description": "👤 Kullanıcı bilgileri ve profil ayarları"
-    }     
-  }  
+    }
+   },
+    "payment": {
+      "title": "📜 Ödemeler",
+      "name": "🏦 Ödeme Adı",
+      "startDate": "📅  Başlangıç Tarihi",
+      "recurring": "Tekrarlayan",
+      "months": "ay",
+      "deleteMessage": "Bu ödemeyi silmek istediğinizden emin misiniz?", 
+      "amount": "Tutar", 
+      "placeholderName": "Ödeme adı (Örn: Kredi, Fatura)",
+      "placeholderAmount": "Tutar girin",
+      "addTitle": "Ödeme Ekle",
+      "installment-count": "Taksit Sayısı",
+      "detailTitle": "Ödeme Detayları" 
+    }   
+   
 }

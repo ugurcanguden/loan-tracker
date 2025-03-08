@@ -1,20 +1,38 @@
 {
+  "common": {
+    "cancel": "cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "close": "Close",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "deleteTitle": "Delete Operation",
+    "deleteMessage": "Are you sure you want to delete this item?"
+  },
   "welcome": "Welcome!",
   "loan_summary": "Loan Summary",
   "total_debt": "Total Debt",
   "remaining_debt": "Remaining Debt",
-  "settings":  {
+  "settings": {
     "settings": "Settings",
-    "language": "Language",  
-    "close":"Close",
+    "language": "Language",
+    "close": "Close",
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode"
-  } ,
+  },
   "menu": {
-    "home":"Home",
-    "payments":"Payments",
-    "income":"Income",
-    "menu":"Menus",
+    "home": "Home",
+    "payments": "Payments",
+    "income": "Income",
+    "menu": "Menus",
     "settings": {
       "title": "Settings",
       "description": "⚙️ Language, theme, and general settings"
@@ -26,6 +44,20 @@
     "profile": {
       "title": "Profile",
       "description": "👤 User information and profile settings"
-    } 
-  }   
+    }
+  },
+  "payment": {
+    "title": "📜 Payments",
+    "name": "🏦 Payment Name",
+    "startDate": "📅 Start Date",
+    "recurring": "Recurring",
+    "months": "months",
+    "deleteMessage": "Are you sure you want to delete this payment?", 
+    "amount": "Amount", 
+    "placeholderName": "Payment name (e.g., Loan, Bill)",
+    "placeholderAmount": "Enter amount",
+    "addTitle": "Add Payment",
+    "installment-count": "Installment Count",
+    "detailTitle": "Payment Detail"
+  }
 }
