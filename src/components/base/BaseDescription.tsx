@@ -37,12 +37,14 @@ export const BaseDescription: React.FC<BaseDescriptionProps> = ({
     item: {
       width: `${98 / column}%`,
       padding: 8,
-      borderRadius: 5,
-      margin:2
+      borderRadius: 5 
     },
     itemContent: {
       padding: 12,
-      borderRadius: 5
+      borderRadius: 5,
+      borderStyle: 'solid',
+      borderWidth: 1,
+      borderColor:theme.border
     },
     label: {
       marginBottom: 4,
@@ -54,7 +56,7 @@ export const BaseDescription: React.FC<BaseDescriptionProps> = ({
   return (
     <BaseView style={styles.container}>
       {items.map((item, index) => (
-        <BaseView key={index} style={styles.item}>
+        <BaseView key={index} style={styles.item} >
           <BaseView style={styles.itemContent}>
             <BaseText variant="label" style={{borderRadius:80}}>
               {item.label}
