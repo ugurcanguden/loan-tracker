@@ -11,9 +11,13 @@ import { BasePage } from "@guden-hooks";
 import { useThemeContext } from "@guden-theme";
 import { IncomeSummary, PaymentSummary } from "@guden-models";
 import { IncomeService, PaymentService } from "@guden-services";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
 
-export function MonthlyOverview() {
+export interface MonthlyOverviewRef {
+  fetchSummaryData: () => Promise<void>;
+}
+
+export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
   const { theme } = useThemeContext();
   const { getTranslation } = BasePage();
   const [incomeSummary, setIncomeSummary] = useState<IncomeSummary | null>(null);
@@ -21,10 +25,6 @@ export function MonthlyOverview() {
   const [isLoading, setIsLoading] = useState(false);
   const { getIncomeSummary } = IncomeService();
   const { getPaymentSummary } = PaymentService();
-
-  useEffect(() => {
-    fetchSummaryData();
-  }, []);
 
   const fetchSummaryData = async () => {
     if (isLoading) return;
@@ -43,6 +43,14 @@ export function MonthlyOverview() {
       setIsLoading(false);
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    fetchSummaryData
+  }));
+
+  useEffect(() => {
+    fetchSummaryData();
+  }, []);
 
   const monthlyItems = [
     {
@@ -97,7 +105,7 @@ export function MonthlyOverview() {
       <BaseDescription items={monthlyItems as DescriptionItemProps[]} column={2} />
     </BaseView>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

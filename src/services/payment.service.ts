@@ -1,4 +1,4 @@
-import { Payment, PaymentDetail, PaymentSummary, PaymentWithStats } from "@guden-models";
+import { Payment, PaymentDetail, PaymentSummary, PaymentWithStats, UpcomingPayment } from "@guden-models";
 import { getDatabase } from "./db";
 
 
@@ -263,6 +263,45 @@ export const PaymentService = () => {
     }
   };
 
+  const getUpcomingPayments = async (): Promise<UpcomingPayment[]> => {
+    const db = await getDatabase();
+    try {
+      const query = `
+        WITH upcoming_details AS (
+          SELECT 
+            pd.paymentId,
+            pd.amount as installment_amount,
+            pd.dueDate,
+            pd.isPaid,
+            pd.paidDate,
+            ROW_NUMBER() OVER (PARTITION BY pd.paymentId ORDER BY pd.dueDate ASC) as next_installment
+          FROM payment_details pd
+          WHERE pd.dueDate >= date('now')
+          AND pd.dueDate <= date('now', '+10 days')
+          AND pd.isPaid = 0
+        )
+        SELECT 
+          p.*,
+          ud.installment_amount,
+          ud.dueDate,
+          ud.isPaid,
+          ud.paidDate,
+          COUNT(*) OVER (PARTITION BY p.id) as remainingInstallments
+        FROM payments p
+        INNER JOIN upcoming_details ud ON p.id = ud.paymentId
+        WHERE ud.next_installment = 1
+        ORDER BY ud.dueDate ASC
+        LIMIT 5;
+      `;
+
+      const payments = await db.getAllAsync(query);
+      return payments as UpcomingPayment[];
+    } catch (error) {
+      console.error("Yaklaşan ödemeler getirilirken hata:", error);
+      throw error;
+    }
+  };
+
   return {
     addPayment,
     getPayments,
@@ -271,5 +310,6 @@ export const PaymentService = () => {
     markInstallmentAsPaid,
     unmarkInstallmentAsPaid,
     getPaymentSummary,
+    getUpcomingPayments,
   };
 };

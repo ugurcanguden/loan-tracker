@@ -13,3 +13,13 @@ export interface Payment {
     totalPaid?: number;
     progress?: number;
 }
+export interface UpcomingPayment {
+    id?: number;
+    name: string;
+    amount: number;
+    dueDate: string;
+    isPaid: number;
+    paidDate?: string;
+    remainingInstallments?: number;
+}
+

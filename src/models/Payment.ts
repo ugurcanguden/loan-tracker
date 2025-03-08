@@ -8,15 +8,16 @@ export interface Payment {
   description?: string;
   created_at?: string;
   // Ödeme detayları için ek alanlar
-  dueDate?: string;
-  installment_amount?: number;
-  isPaid?: number;
+  dueDate: string;
+  installment_amount: number;
+  isPaid: number;
   paidDate?: string;
   // İstatistikler için ek alanlar
   totalInstallments?: number;
   paidInstallments?: number;
   totalPaid?: number;
   progress?: number;
+  remaining_installments?: number;
 }
 
 export interface PaymentDetail {
