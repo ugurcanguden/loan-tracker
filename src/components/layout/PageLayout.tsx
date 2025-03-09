@@ -17,6 +17,7 @@ export interface PageLayoutProps {
     onAddPress?: () => void;
     addButtonIcon?: string;
     addButtonSize?: number;
+    rightComponent?: React.ReactNode;
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
@@ -29,7 +30,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     showAddButton = false,
     onAddPress,
     addButtonIcon = 'add-circle-sharp',
-    addButtonSize = 24
+    addButtonSize = 24,
+    rightComponent
 }) => {
     const { theme } = useThemeContext();
 
@@ -60,6 +62,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                         />
                     </BaseTouchable>
                 )}
+                {
+                    rightComponent && rightComponent
+                }
             </View>
         );
     };

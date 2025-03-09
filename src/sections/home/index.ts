@@ -1,3 +1,3 @@
 export * from './Home';
-export * from './MonthlyOverview';
-export * from './YearlyOverview'; 
+export * from './components/MonthlyOverview';
+export * from './components/YearlyOverview'; 

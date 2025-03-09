@@ -1,43 +1,5 @@
 import { Payment, PaymentDetail, PaymentSummary, PaymentWithStats, UpcomingPayment } from "@guden-models";
 import { getDatabase } from "./db";
-
-
-const initializeDatabase = async () => {
-  try {
-    const db = await getDatabase();
-    if (!db) {
-      throw new Error("Veritabanı bağlantısı kurulamadı");
-    }
-
-    // Veritabanı bağlantısını test et
-    await db.execAsync("SELECT 1");
-    return db;
-  } catch (error) {
-    console.error("Veritabanı başlatılırken hata:", error);
-
-    // Veritabanını yeniden başlatmayı dene
-    try {
-      // Mevcut bağlantıyı kapat
-      const db = await getDatabase();
-      if (db) {
-        await db.closeAsync();
-      }
-
-      // Yeni bağlantı oluştur
-      const newDb = await getDatabase();
-      if (!newDb) {
-        throw new Error("Veritabanı yeniden başlatılamadı");
-      }
-      return newDb;
-    } catch (retryError) {
-      console.error("Veritabanı yeniden başlatılırken hata:", retryError);
-      throw new Error(
-        "Veritabanı bağlantısı kurulamadı. Lütfen uygulamayı yeniden başlatın."
-      );
-    }
-  }
-};
-
 export const PaymentService = () => {
   const addPayment = async (payment: Payment) => {
     const db = await getDatabase();
@@ -106,7 +68,6 @@ export const PaymentService = () => {
       throw error;
     }
   };
-
   const getPaymentDetails = async (
     paymentId: number
   ): Promise<PaymentDetail[]> => {
@@ -127,7 +88,6 @@ export const PaymentService = () => {
             `,
         [paymentId]
       );
-
       return allRows as PaymentDetail[];
     } catch (error) {
       console.error("Ödeme detayları getirilirken hata:", error);
@@ -276,8 +236,7 @@ export const PaymentService = () => {
             pd.paidDate,
             ROW_NUMBER() OVER (PARTITION BY pd.paymentId ORDER BY pd.dueDate ASC) as next_installment
           FROM payment_details pd
-          WHERE pd.dueDate >= date('now')
-          AND pd.dueDate <= date('now', '+10 days')
+          WHERE pd.dueDate <= date('now', '+10 days')
           AND pd.isPaid = 0
         )
         SELECT 

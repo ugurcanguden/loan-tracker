@@ -1,5 +1,6 @@
 {
   "common": {
+    "locale": "en-US",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
@@ -196,6 +197,7 @@
     "yearly": "Yearly", 
     "income": "Income",
     "expense": "Expense",
-    "balance": "Balance"
+    "balance": "Balance",
+    "past-payments": "Past Payments"
   }
 }

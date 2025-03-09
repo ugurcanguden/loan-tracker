@@ -1,9 +1,9 @@
 import React from 'react';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
 import { useThemeContext } from "@guden-theme";
-import { useLoading } from '../context/LoadingContext';
+import { useLoading } from '../../contexts/LoadingContext';
 
-const LoadingSpinner: React.FC = () => {
+export const LoadingSpinner: React.FC = () => {
   const { theme } = useThemeContext();
   const { isLoading } = useLoading();
 
@@ -55,5 +55,3 @@ const styles = StyleSheet.create({
     elevation: 5,
   }
 });
-
-export default LoadingSpinner; 

@@ -2,6 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import {
     BaseAmountInput,
     BaseDateInput,
+    BaseDatePicker,
     BaseText,
     BaseTextArea,
     BaseTextInput,
@@ -20,15 +21,7 @@ import { ValidationErrors, validatePaymentForm } from '../../utils/validations';
 
 export interface PaymentFormProps {
     onClosed: () => void;
-}
-
-const formatDate = (date: Date): string => {
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-};
-
+} 
 const formatAmount = (amount: number): string => {
     return amount.toLocaleString('tr-TR', {
         minimumFractionDigits: 2,
@@ -144,26 +137,7 @@ export default function PaymentForm({ onClosed }: PaymentFormProps) {
             Alert.alert(getTranslation("common.error"), getTranslation("common.saveError"));
         }
     };
-
-    const Header = () => (
-        <View style={styles.headerContainer}>
-            <BaseText variant="title" weight="bold" style={styles.headerTitle}>
-                {getTranslation("payment.addTitle")}
-            </BaseText>
-            <BaseTouchable
-                variant="outline"
-                onPress={onClosed}
-                style={styles.closeButton}
-            >
-                <Ionicons
-                    name="close-circle-outline"
-                    size={26}
-                    color={theme.colors.secondary}
-                />
-            </BaseTouchable>
-        </View>
-    );
-
+ 
     return (
         
             <BaseView variant="card" padding="medium" style={styles.formContainer}>
@@ -193,11 +167,8 @@ export default function PaymentForm({ onClosed }: PaymentFormProps) {
 
                 {/* Başlangıç Tarihi */}
                 <BaseText variant="label">{getTranslation("payment.startDate")}</BaseText>
-                <BaseDateInput
-                    value={startDate}
-                    onChange={setStartDate}
-                    format="dd/MM/yyyy"
-                />
+                <BaseDatePicker onChange={(data)=>setStartDate(new Date(data!))} value={startDate.toISOString()}></BaseDatePicker>
+                
 
                 {/* Taksitli Ödeme Seçeneği */}
                 <View style={styles.switchContainer}>

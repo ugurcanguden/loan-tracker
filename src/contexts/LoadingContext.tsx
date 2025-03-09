@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -14,15 +14,16 @@ const LoadingContext = createContext<LoadingContextType>({
 
 export const useLoading = () => useContext(LoadingContext);
 
-export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const showLoading = () => setIsLoading(true);
-  const hideLoading = () => setIsLoading(false);
-
+export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [apiCallCountLoading, setApiCallCount] = useState(0);
+  const showLoading = () => setApiCallCount((prev) => prev + 1);
+  const hideLoading = () => setApiCallCount((prev) => prev - 1);
+  const isLoading = apiCallCountLoading > 0;
   return (
     <LoadingContext.Provider value={{ isLoading, showLoading, hideLoading }}>
       {children}
     </LoadingContext.Provider>
   );
-}; 
+};

@@ -14,12 +14,9 @@ import { IncomeService, PaymentService } from "@guden-services";
 import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { useGlobalState } from "@guden-context";
 
-export interface ChartOverviewRef {
-  fetchChartData: () => Promise<void>;
-}
-
-export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
+export const ChartOverview =() => {
   const { theme } = useThemeContext();
   const { getTranslation } = BasePage();
   const [incomeSummary, setIncomeSummary] = useState<IncomeSummary | null>(null);
@@ -28,10 +25,10 @@ export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
   const [activeTab, setActiveTab] = useState(0);
   const { getIncomeSummary } = IncomeService();
   const { getPaymentSummary } = PaymentService();
+  const { refreshCount} = useGlobalState();
 
-  const fetchChartData = async () => {
-    if (isLoading) return;
-    
+  const fetchChartData =  async() => {
+    if (isLoading) return;   
     setIsLoading(true);
     try {
       const [incomeData, paymentData] = await Promise.all([
@@ -45,15 +42,15 @@ export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useImperativeHandle(ref, () => ({
-    fetchChartData
-  }));
-
+  }; 
   useEffect(() => {
     fetchChartData();
   }, []);
+  useEffect(() => {
+    if (refreshCount > 0) {
+      fetchChartData();
+    }
+  }, [refreshCount]);
 
   const incomeChartData = {
     labels: [getTranslation("home.monthly"), getTranslation("home.yearly")],
@@ -278,4 +275,4 @@ export const ChartOverview = forwardRef<ChartOverviewRef>((_, ref) => {
       {renderSummary()}
     </BaseView>
   );
-}); 
+}; 

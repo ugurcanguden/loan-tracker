@@ -1,49 +1,46 @@
-import { BaseView, PageLayout, BaseButton, BaseIcon } from "@guden-components";
+import { BaseButton, BaseTouchable, BaseView, PageLayout } from "@guden-components";
+import { useGlobalState } from "@guden-context";
 import { BasePage } from "@guden-hooks";
-import { MonthlyOverview, MonthlyOverviewRef } from "./MonthlyOverview";
-import { YearlyOverview, YearlyOverviewRef } from "./YearlyOverview";
-import { UpcomingPayments, UpcomingPaymentsRef } from "./UpcomingPayments";
-import { ChartOverview, ChartOverviewRef } from "./ChartOverview";
-import { useThemeContext } from "@guden-theme";
-import { useRef, useState } from "react";
+import { ChartOverview } from "./components/ChartOverview";
+import { MonthlyOverview } from "./components/MonthlyOverview";
+import { UpcomingPayments } from "./components/UpcomingPayments";
+import { YearlyOverview } from "./components/YearlyOverview";
+import { useEffect } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export function Home() {
-  const { theme } = useThemeContext();
-  const { getTranslation } = BasePage();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const monthlyRef = useRef<MonthlyOverviewRef>(null);
-  const yearlyRef = useRef<YearlyOverviewRef>(null);
-  const upcomingRef = useRef<UpcomingPaymentsRef>(null);
-  const chartRef = useRef<ChartOverviewRef>(null);
-
-  const handleRefresh = async () => {
-    if (isRefreshing) return;
-
-    setIsRefreshing(true);
-    try {
-      await Promise.all([
-        monthlyRef.current?.fetchSummaryData(),
-        yearlyRef.current?.fetchSummaryData(),
-        upcomingRef.current?.fetchUpcomingPayments(),
-        chartRef.current?.fetchChartData(),
-      ]);
-    } catch (error) {
-      console.error("Veriler yenilenirken hata:", error);
-    } finally {
-      setIsRefreshing(false);
-    }
+  const { getTranslation,theme } = BasePage();
+  const { refreshCount, setRefreshCount } = useGlobalState();
+  useEffect(() => {
+    setRefreshCount(0);
+  }, []);
+  const handleRefresh = () => {
+    setRefreshCount(refreshCount + 1);
   };
 
   return (
-    <PageLayout 
-      title={getTranslation("home.title")} 
-      padding="none" 
+    <PageLayout
+      title={getTranslation("home.title")}
+      padding="none"
+      rightComponent={
+        <BaseTouchable
+          variant="outline"
+          size="small" 
+          onPress={handleRefresh}
+        >
+          <MaterialCommunityIcons
+            name="refresh"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </BaseTouchable>
+      }
     >
       <BaseView>
-        <MonthlyOverview ref={monthlyRef} />
-        <YearlyOverview ref={yearlyRef} />
-        <ChartOverview ref={chartRef} />
-        <UpcomingPayments ref={upcomingRef} />
+        <MonthlyOverview />
+        <YearlyOverview />
+        <ChartOverview />
+        <UpcomingPayments />
       </BaseView>
     </PageLayout>
   );

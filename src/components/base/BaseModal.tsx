@@ -95,9 +95,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
             visible={visible}
             onRequestClose={onClose}
         >
-            <TouchableWithoutFeedback onPress={handleOverlayPress}>
                 <View style={styles.overlay}>
-                    <TouchableWithoutFeedback>
                         <View style={[
                             styles.modalContainer,
                             {
@@ -134,9 +132,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
                                 </View>
                             </BaseView>
                         </View>
-                    </TouchableWithoutFeedback>
                 </View>
-            </TouchableWithoutFeedback>
         </Modal>
     );
 };

@@ -1,6 +1,7 @@
 import {
   BaseAmountInput,
   BaseDateInput,
+  BaseDatePicker,
   BaseText,
   BaseTextArea,
   BaseTextInput,
@@ -123,8 +124,9 @@ export default function IncomeForm({ onClosed }: IncomeFormProps) {
       {errors.amount && <BaseText variant="error">{errors.amount}</BaseText>}
 
       {/* Tarih */}
-      <BaseText variant="label">{getTranslation("income.date")}</BaseText>
-      <BaseDateInput value={date} onChange={setDate} format="dd/MM/yyyy" />
+      <BaseText variant="label">{getTranslation("income.date")}</BaseText> 
+      <BaseDatePicker onChange={(data)=>setDate(new Date(data!))} value={date.toISOString()}></BaseDatePicker>
+
 
       {/* Açıklama */}
       <BaseText variant="label">

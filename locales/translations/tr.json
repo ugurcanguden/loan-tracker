@@ -1,5 +1,6 @@
 {
   "common": {
+    "locale": "tr-TR",
     "cancel": "İptal",
     "save": "Kaydet",
     "delete": "Sil",
@@ -195,6 +196,7 @@
     "yearly": "Yıllık",
     "income": "Gelir",
     "expense": "Gider",
-    "balance": "Bakiye"
+    "balance": "Bakiye",
+    "past-payments": "Geçmiş Ödemeler" 
   }
 }

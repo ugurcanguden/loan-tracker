@@ -10,6 +10,7 @@ import {
   BaseView,
   BaseDescription,
   DescriptionItemProps,
+  PageLayout,
 } from "@guden-components";
 import { BasePage } from "@guden-hooks";
 import { Payment, PaymentSummary } from "@guden-models";
@@ -17,10 +18,9 @@ import { PaymentService } from "@guden-services";
 import { useThemeContext } from "@guden-theme";
 import { ConvertDateToString, DateFormat } from "guden-core";
 import { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native";
-import { PageLayout } from "../../components/layout/PageLayout";
-import { PaymentDetailPage } from "./PaymentDetail";
+import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native"; 
 import PaymentForm from "./PaymentForm";
+import PaymentDetailPage from "./payment-detail/PaymentDetail";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 

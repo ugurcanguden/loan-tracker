@@ -11,13 +11,10 @@ import { BasePage } from "@guden-hooks";
 import { useThemeContext } from "@guden-theme";
 import { IncomeSummary, PaymentSummary } from "@guden-models";
 import { IncomeService, PaymentService } from "@guden-services";
-import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
-
-export interface MonthlyOverviewRef {
-  fetchSummaryData: () => Promise<void>;
-}
-
-export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
+import { useEffect, useState, useImperativeHandle } from "react";
+import { useGlobalState } from "@guden-context";
+ 
+export const YearlyOverview = () => {
   const { theme } = useThemeContext();
   const { getTranslation } = BasePage();
   const [incomeSummary, setIncomeSummary] = useState<IncomeSummary | null>(null);
@@ -25,6 +22,7 @@ export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
   const [isLoading, setIsLoading] = useState(false);
   const { getIncomeSummary } = IncomeService();
   const { getPaymentSummary } = PaymentService();
+  const { refreshCount} = useGlobalState();
 
   const fetchSummaryData = async () => {
     if (isLoading) return;
@@ -38,52 +36,53 @@ export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
       setIncomeSummary(incomeData);
       setPaymentSummary(paymentData);
     } catch (error) {
-      console.error("Aylık özet veriler getirilirken hata:", error);
+      console.error("Yıllık özet veriler getirilirken hata:", error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useImperativeHandle(ref, () => ({
-    fetchSummaryData
-  }));
-
+  }; 
   useEffect(() => {
     fetchSummaryData();
   }, []);
+  useEffect(() => {
+    if (refreshCount > 0) {
+      fetchSummaryData();
+    }
+  }, [refreshCount]);
 
-  const monthlyItems = [
+  const yearlyItems = [
     {
-      label: getTranslation("home.monthly-income"),
-      value: incomeSummary?.monthlyTotal || 0,
+      label: getTranslation("home.yearly-income"),
+      value: incomeSummary?.yearlyTotal || 0,
       isCurrency: true,
       textStyle: { color: theme.colors.success },
     },
     {
-      label: getTranslation("home.monthly-payment"),
-      value: paymentSummary?.monthlyPayment || 0,
+      label: getTranslation("home.yearly-payment"),
+      value: paymentSummary?.totalAmount || 0,
       isCurrency: true,
       textStyle: { color: theme.colors.error },
     },
     {
-      label: getTranslation("home.monthly-balance"),
+      label: getTranslation("home.yearly-balance"),
       value:
-        (incomeSummary?.monthlyTotal || 0) -
-        (paymentSummary?.monthlyPayment || 0),
+        (incomeSummary?.yearlyTotal || 0) -
+        (paymentSummary?.totalAmount || 0),
       isCurrency: true,
       textStyle: {
         color:
-          (incomeSummary?.monthlyTotal || 0) -
-            (paymentSummary?.monthlyPayment || 0) >=
+          (incomeSummary?.yearlyTotal || 0) -
+            (paymentSummary?.totalAmount || 0) >=
           0
             ? theme.colors.success
             : theme.colors.error,
       },
     },
     {
-      label: getTranslation("home.upcoming-payments"),
-      value: paymentSummary?.overdueCount || 0,
-      textStyle: { color: theme.colors.warning },
+      label: getTranslation("home.total-transactions"),
+      value:
+        (incomeSummary?.totalIncomes || 0) +
+        (paymentSummary?.totalPayments || 0),
     },
   ];
 
@@ -91,7 +90,7 @@ export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
     <BaseView variant="card" padding="medium" style={styles.container}>
       <BaseView style={styles.header}>
         <BaseText variant="title" weight="bold" style={styles.title}>
-          {getTranslation("home.monthly-overview")}
+          {getTranslation("home.yearly-overview")}
         </BaseText>
         <BaseButton
           variant="icon"
@@ -102,10 +101,10 @@ export const MonthlyOverview = forwardRef<MonthlyOverviewRef>((_, ref) => {
           <BaseIcon name="refresh" size={20} color={theme.colors.text} />
         </BaseButton>
       </BaseView>
-      <BaseDescription items={monthlyItems as DescriptionItemProps[]} column={2} />
+      <BaseDescription items={yearlyItems as DescriptionItemProps[]} column={2} />
     </BaseView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {

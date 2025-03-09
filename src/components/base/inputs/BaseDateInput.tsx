@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { Platform, TouchableOpacity } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
+import { Platform, TextInputProps, TouchableOpacity, View } from 'react-native';
 import { BaseTextInput } from '../BaseTextInput';
-import { TextInputProps } from 'react-native';
-import { BaseText } from '../BaseText';
 
-interface BaseDateInputProps extends Omit<TextInputProps, 'value' | 'onChangeText'> {
-    value: Date;
-    onChange: (date: Date) => void;
+export interface BaseDateInputProps extends Omit<TextInputProps, 'onChange' | 'value'> {
+    value?: string | Date;
+    onChange?: (data: { formatted: string; raw: Date }) => void; // Hem formatlı hem Date döner
     format?: string;
     mode?: 'date' | 'time' | 'datetime';
     minimumDate?: Date;
@@ -25,11 +23,15 @@ export const BaseDateInput: React.FC<BaseDateInputProps> = ({
 }) => {
     const [show, setShow] = useState(false);
 
+    const parseDate = (date: string | Date): Date => {
+        return typeof date === 'string' ? new Date(date) : date;
+    };
+
     const formatDate = (date: Date): string => {
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
-        
+
         switch (format.toLowerCase()) {
             case 'mm/dd/yyyy':
                 return `${month}/${day}/${year}`;
@@ -43,20 +45,17 @@ export const BaseDateInput: React.FC<BaseDateInputProps> = ({
     };
 
     const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-        const currentDate = selectedDate || value;
-        setShow(Platform.OS === 'ios');
-        onChange(currentDate);
-    };
-
-    const showDatepicker = () => {
-        setShow(true);
+        setShow(false);
+        if (selectedDate) {
+            onChange?.({ formatted: formatDate(selectedDate), raw: selectedDate });
+        }
     };
 
     return (
-        <>
-            <TouchableOpacity onPress={showDatepicker}>
+        <View>
+            <TouchableOpacity onPress={() => setShow(true)}>
                 <BaseTextInput
-                    value={formatDate(value)}
+                    value={value ? formatDate(parseDate(value)) : ''}
                     editable={false}
                     {...props}
                 />
@@ -64,14 +63,14 @@ export const BaseDateInput: React.FC<BaseDateInputProps> = ({
 
             {show && (
                 <DateTimePicker
-                    value={value}
+                    value={value ? parseDate(value) : new Date()}
                     mode={mode}
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={handleChange}
                     minimumDate={minimumDate}
                     maximumDate={maximumDate}
+                    onChange={handleChange}
                 />
             )}
-        </>
+        </View>
     );
-}; 
+};

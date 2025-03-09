@@ -12,6 +12,7 @@ import {
   PageLayout,
   BaseDescription,
   DescriptionItemProps,
+  BaseScrollView,
 } from "@guden-components";
 import { IncomeService } from "@guden-services";
 import { Income, IncomeSummary } from "@guden-models";
@@ -98,10 +99,10 @@ export  function Incomes() {
     <BaseModal
       visible={isFilterModalVisible}
       onClose={() => setIsFilterModalVisible(false)}
-      size="medium"
+      size="large"
       title={getTranslation("income.filter.title")}
-    >
-      <BaseView style={styles.filterContainer}>
+    > 
+    <ScrollView style={styles.modalScroll} contentContainerStyle={styles.filterContainer}>  
         <BaseView style={styles.filterItem}>
           <BaseText variant="label">{getTranslation("income.filter.startDate")}</BaseText>
           <BaseDatePicker
@@ -140,7 +141,7 @@ export  function Incomes() {
             <BaseText>{getTranslation("income.filter.apply")}</BaseText>
           </BaseTouchable>
         </BaseView>
-      </BaseView>
+      </ScrollView>
     </BaseModal>
   );
 

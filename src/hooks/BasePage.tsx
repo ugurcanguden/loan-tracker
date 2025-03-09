@@ -1,8 +1,10 @@
+import { useThemeContext } from "@guden-theme";
 import { ConvertDateToString, DateFormat } from "guden-core";
 import { useTranslation } from "react-i18next";
 
 export const BasePage = () => {
     const { t } = useTranslation();
+    const {theme} = useThemeContext();
     const getTranslation = (key: string): string => {
         return t(key);
     }
@@ -12,6 +14,7 @@ export const BasePage = () => {
     };
     return {
         getTranslation,
-        convertDate
+        convertDate,
+        theme
     }
 }

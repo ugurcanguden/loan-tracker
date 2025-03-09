@@ -11,13 +11,11 @@ import { BasePage } from "@guden-hooks";
 import { useThemeContext } from "@guden-theme";
 import { IncomeSummary, PaymentSummary } from "@guden-models";
 import { IncomeService, PaymentService } from "@guden-services";
-import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
+import { useEffect, useState } from "react";
+import { useGlobalState } from "@guden-context";
 
-export interface YearlyOverviewRef {
-  fetchSummaryData: () => Promise<void>;
-}
-
-export const YearlyOverview = forwardRef<YearlyOverviewRef>((_, ref) => {
+export const MonthlyOverview = () => {
+  const { refreshCount} = useGlobalState();
   const { theme } = useThemeContext();
   const { getTranslation } = BasePage();
   const [incomeSummary, setIncomeSummary] = useState<IncomeSummary | null>(null);
@@ -38,53 +36,53 @@ export const YearlyOverview = forwardRef<YearlyOverviewRef>((_, ref) => {
       setIncomeSummary(incomeData);
       setPaymentSummary(paymentData);
     } catch (error) {
-      console.error("Yıllık özet veriler getirilirken hata:", error);
+      console.error("Aylık özet veriler getirilirken hata:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useImperativeHandle(ref, () => ({
-    fetchSummaryData
-  }));
-
   useEffect(() => {
     fetchSummaryData();
   }, []);
+  useEffect(() => {
+    if (refreshCount > 0) {
+      fetchSummaryData();
+    }
+  }, [refreshCount]);
 
-  const yearlyItems = [
+  const monthlyItems = [
     {
-      label: getTranslation("home.yearly-income"),
-      value: incomeSummary?.yearlyTotal || 0,
+      label: getTranslation("home.monthly-income"),
+      value: incomeSummary?.monthlyTotal || 0,
       isCurrency: true,
       textStyle: { color: theme.colors.success },
     },
     {
-      label: getTranslation("home.yearly-payment"),
-      value: paymentSummary?.totalAmount || 0,
+      label: getTranslation("home.monthly-payment"),
+      value: paymentSummary?.monthlyPayment || 0,
       isCurrency: true,
       textStyle: { color: theme.colors.error },
     },
     {
-      label: getTranslation("home.yearly-balance"),
+      label: getTranslation("home.monthly-balance"),
       value:
-        (incomeSummary?.yearlyTotal || 0) -
-        (paymentSummary?.totalAmount || 0),
+        (incomeSummary?.monthlyTotal || 0) -
+        (paymentSummary?.monthlyPayment || 0),
       isCurrency: true,
       textStyle: {
         color:
-          (incomeSummary?.yearlyTotal || 0) -
-            (paymentSummary?.totalAmount || 0) >=
+          (incomeSummary?.monthlyTotal || 0) -
+            (paymentSummary?.monthlyPayment || 0) >=
           0
             ? theme.colors.success
             : theme.colors.error,
       },
     },
     {
-      label: getTranslation("home.total-transactions"),
-      value:
-        (incomeSummary?.totalIncomes || 0) +
-        (paymentSummary?.totalPayments || 0),
+      label: getTranslation("home.past-payments"),
+      value: paymentSummary?.overdueCount || 0,
+      textStyle: { color: theme.colors.error },
     },
   ];
 
@@ -92,7 +90,7 @@ export const YearlyOverview = forwardRef<YearlyOverviewRef>((_, ref) => {
     <BaseView variant="card" padding="medium" style={styles.container}>
       <BaseView style={styles.header}>
         <BaseText variant="title" weight="bold" style={styles.title}>
-          {getTranslation("home.yearly-overview")}
+          {getTranslation("home.monthly-overview")}
         </BaseText>
         <BaseButton
           variant="icon"
@@ -103,10 +101,10 @@ export const YearlyOverview = forwardRef<YearlyOverviewRef>((_, ref) => {
           <BaseIcon name="refresh" size={20} color={theme.colors.text} />
         </BaseButton>
       </BaseView>
-      <BaseDescription items={yearlyItems as DescriptionItemProps[]} column={2} />
+      <BaseDescription items={monthlyItems as DescriptionItemProps[]} column={2} />
     </BaseView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
