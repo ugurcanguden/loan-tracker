@@ -18,7 +18,7 @@ import { PaymentService } from "@guden-services";
 import { useThemeContext } from "@guden-theme";
 import { ConvertDateToString, DateFormat } from "guden-core";
 import { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native"; 
+import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native";
 import PaymentForm from "./PaymentForm";
 import PaymentDetailPage from "./payment-detail/PaymentDetail";
 
@@ -114,8 +114,10 @@ export default function Payments() {
   const FilterModal = () => (
     <BaseModal
       visible={isFilterModalVisible}
-      onClose={() => setIsFilterModalVisible(false)}
-      size="medium"
+      onClose={() => { 
+        setIsFilterModalVisible(false);
+      }}
+      size="large"
       title={getTranslation("payment.filter.title")}
     >
       <BaseView style={styles.filterContainer}>
@@ -427,7 +429,10 @@ export default function Payments() {
             variant="outline"
             size="small"
             style={dynamicStyles.actionButton}
-            onPress={() => setIsFilterModalVisible(true)}
+            onPress={() => {
+              setIsFilterModalVisible(true);
+              setIsModalVisible(false);
+            }}
           >
             <MaterialCommunityIcons
               name="filter-outline"

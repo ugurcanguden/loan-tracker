@@ -5,6 +5,7 @@ import { useThemeContext } from '../../../theme/themeContext';
 import { BaseText } from '../base/BaseText';
 import { BaseTouchable } from '../base/BaseTouchable';
 import { Ionicons } from '@expo/vector-icons';
+import { BaseView } from '../base';
 
 export interface PageLayoutProps {
     header?: React.ReactNode;
@@ -18,6 +19,7 @@ export interface PageLayoutProps {
     addButtonIcon?: string;
     addButtonSize?: number;
     rightComponent?: React.ReactNode;
+    scrollable?: boolean; // 🔹 İçeriğin kaydırılabilir olup olmadığını belirler
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
@@ -31,7 +33,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     onAddPress,
     addButtonIcon = 'add-circle-sharp',
     addButtonSize = 24,
-    rightComponent
+    rightComponent,
+    scrollable = true // 🔹 Varsayılan olarak içerik kaydırılabilir
 }) => {
     const { theme } = useThemeContext();
 
@@ -39,7 +42,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         if (!title && !showAddButton) return null;
 
         return (
-            <View style={[styles.defaultHeader, { borderBottomColor: theme.colors.border }]}>
+            <BaseView style={[styles.defaultHeader, { borderBottomColor: theme.colors.border }]}>
                 {title && (
                     <BaseText 
                         variant="title" 
@@ -56,16 +59,14 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                         style={styles.addButton}
                     >
                         <Ionicons
-                            name={'add-circle'}
+                            name={addButtonIcon as any}
                             size={addButtonSize}
                             color={theme.colors.secondary}
                         />
                     </BaseTouchable>
                 )}
-                {
-                    rightComponent && rightComponent
-                }
-            </View>
+                {rightComponent && rightComponent}
+            </BaseView>
         );
     };
 
@@ -100,17 +101,21 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     });
 
     return (
-        <View style={styles.container}>
+        <BaseView style={styles.container}>
             {header || renderDefaultHeader()}
-            <BaseScrollView
-                style={styles.content}
-                padding={padding}
-                backgroundColor={backgroundColor}
-                showsVerticalScrollIndicator={false}
-            >
-                {children}
-            </BaseScrollView>
+
+            {/* 🔹 İçerik eğer `scrollable` ise `BaseScrollView` içinde gösterilir */}
+            {scrollable ? (
+                <BaseScrollView style={styles.content} padding={padding} backgroundColor={backgroundColor}>
+                    {children}
+                </BaseScrollView>
+            ) : (
+                <BaseView style={styles.content} padding={padding} backgroundColor={backgroundColor}>
+                    {children}
+                </BaseView>
+            )}
+
             {footer && <View style={styles.footer}>{footer}</View>}
-        </View>
+        </BaseView>
     );
-}; 
+};

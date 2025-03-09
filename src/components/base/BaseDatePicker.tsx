@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
+import { Platform, StyleSheet, TouchableOpacity, View, Modal } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { BaseText } from '../base/BaseText';
 import { BaseView } from '../base/BaseView';
 import { useThemeContext } from '@guden-theme';
@@ -25,52 +25,28 @@ export const BaseDatePicker: React.FC<BaseDatePickerProps> = ({
 }) => {
   const { theme } = useThemeContext();
   const [show, setShow] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // Kapatma işlemi için ref
-  const isScrolling = useRef(false); // Kullanıcı kaydırıyor mu?
+  const [selectedDate, setSelectedDate] = useState<Date | null>(value ? new Date(value) : new Date());
   const { getTranslation } = BasePage();
 
-  const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (event.type === 'dismissed') {
-      setShow(false);
-      return;
-    }
-
+  const handleConfirm = () => {
     if (selectedDate) {
       onChange(selectedDate.toISOString().split('T')[0]);
     }
- 
+    setShow(false); // Sadece bu modal'ı kapat
+  };
 
-    // iOS için kapanmayı geciktirme
-    if (Platform.OS === 'ios') {
-      timeoutRef.current = setTimeout(() => {
-        console.log("ios2")
-        setShow(false);
-      }, 2000);
-    } else {
-      setShow(false);
+  const handleCancel = () => {
+    setShow(false); // Sadece bu modal'ı kapat
+  };
+
+  const handleDateChange = (event: any, date?: Date) => {
+    if (date) {
+      setSelectedDate(date);
     }
   };
 
-  const handlePress = () => {
-    // Eğer daha önce açılma süresi dolmadan tekrar açılmışsa eski timeout'u iptal et
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setShow(true);
-  };
-
+  const handlePress = () => setShow(true);
   const handleClear = () => onChange(null);
-
-  const handleTouchStart = () => {
-    isScrolling.current = true; // Kullanıcı kaydırmaya başladı
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current); // Kapanma işlemini durdur
-    }
-  };
-
-  const handleTouchEnd = () => {
-    isScrolling.current = false; // Kaydırma bitti
-  };
 
   const styles = StyleSheet.create({
     container: { marginTop: 4 },
@@ -88,6 +64,41 @@ export const BaseDatePicker: React.FC<BaseDatePickerProps> = ({
       color: value ? theme.colors.text : theme.colors.secondary,
     },
     icon: { marginLeft: 8 },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      backgroundColor: theme.colors.background,
+      padding: 20,
+      borderRadius: 10,
+      width: '80%',
+      alignItems: 'center',
+    },
+    modalButtons: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginTop: 10,
+    },
+    modalButton: {
+      padding: 10,
+      borderRadius: 5,
+      flex: 1,
+      alignItems: 'center',
+    },
+    confirmButton: { 
+      marginRight: 5,
+    },
+    cancelButton: { 
+      marginLeft: 5,
+    },
+    buttonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+    },
   });
 
   const locale = getTranslation("common.locale");
@@ -118,21 +129,48 @@ export const BaseDatePicker: React.FC<BaseDatePickerProps> = ({
         )}
       </TouchableOpacity>
 
-      {show && (
-        <View
-          onTouchStart={handleTouchStart} // Kullanıcı kaydırmaya başlarsa
-          onTouchEnd={handleTouchEnd} // Kullanıcı kaydırmayı bırakırsa
+      {show && Platform.OS === 'ios' ? (
+        <Modal
+          transparent={true}
+          animationType="fade"
+          presentationStyle="overFullScreen" // 🔹 Üst modal'ın kapanmasını önler
+          onRequestClose={() => {}} // 🔹 Dışarı tıklanınca kapanmayı engeller
         >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <DateTimePicker
+                nativeID='datePicker'
+                value={selectedDate || new Date()}
+                mode="date"
+                display="spinner"
+                onChange={handleDateChange}
+                minimumDate={minDate ? new Date(minDate) : undefined}
+                maximumDate={maxDate ? new Date(maxDate) : undefined}
+                locale={locale}
+              />
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={handleCancel}>
+                  <BaseText>❌</BaseText>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.modalButton, styles.confirmButton]} onPress={handleConfirm}>
+                  <BaseText >✅</BaseText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      ) : (
+        show && (
           <DateTimePicker
-            value={value ? new Date(value) : new Date()}
+            value={selectedDate || new Date()}
             mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleChange}
+            display="default"
+            onChange={handleDateChange}
             minimumDate={minDate ? new Date(minDate) : undefined}
             maximumDate={maxDate ? new Date(maxDate) : undefined}
             locale={locale}
           />
-        </View>
+        )
       )}
     </BaseView>
   );

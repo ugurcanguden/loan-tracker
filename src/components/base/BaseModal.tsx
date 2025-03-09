@@ -82,11 +82,6 @@ export const BaseModal: React.FC<BaseModalProps> = ({
 
     const modalSize = getModalSize();
 
-    const handleOverlayPress = () => {
-        if (closeOnOverlayPress) {
-            onClose();
-        }
-    };
 
     return (
         <Modal
