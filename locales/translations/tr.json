@@ -1,4 +1,10 @@
 {
+  "language": {
+    "label": "Türkçe",
+    "locale": "tr-TR",
+    "currency": "TRY",
+    "dateFormat": "dd.MM.yyyy"
+  },
   "common": {
     "locale": "tr-TR",
     "cancel": "İptal",

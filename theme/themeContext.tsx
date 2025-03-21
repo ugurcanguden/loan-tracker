@@ -1,7 +1,8 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { Theme, darkTheme, lightTheme } from './theme';
+import { useColorScheme } from 'react-native';
 
-// Context için TypeScript tipi oluştur
+// Theme Context için TypeScript tipi
 interface ThemeContextType {
   isDarkMode: boolean;
   setIsDarkMode: (value: boolean) => void;
@@ -17,7 +18,13 @@ export const ThemeContext = createContext<ThemeContextType>({
 
 // Theme Provider Bileşeni
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const systemTheme = useColorScheme(); // Cihazın varsayılan temasını al
+  const [isDarkMode, setIsDarkMode] = useState(systemTheme === 'dark');
+
+  useEffect(() => {
+    console.log('Tema değişti:', isDarkMode ? 'Dark Mode' : 'Light Mode');
+  }, [isDarkMode]);
+
   const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (

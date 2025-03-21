@@ -1,3 +1,5 @@
+import { NotificationContext, NotificationProvider, NotificationType, useNotificationContext } from "./NotificationContext";
+
 export {
     useLoading,
     LoadingProvider 
@@ -8,3 +10,11 @@ export {
     GlobalStateProvider
 } from "./GlobalStateContext";
 
+export {
+    NotificationContext,
+    NotificationProvider,
+    useNotificationContext
+}
+export type {
+    NotificationType
+}

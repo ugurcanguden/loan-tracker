@@ -1,4 +1,10 @@
 {
+  "language": { 
+    "label": "English",
+    "locale": "en-US",
+    "currency": "USD",
+    "dateFormat": "MM/dd/yyyy"
+  },
   "common": {
     "locale": "en-US",
     "cancel": "Cancel",
@@ -136,7 +142,7 @@
     "description": "Description",
     "summary": "Income Summary",
     "monthlyTotal": "Monthly Total",
-    "yearlyTotal": "Yearly Total", 
+    "yearlyTotal": "Yearly Total",
     "totalAmount": "Total Amount",
     "totalIncomes": "Total Income Count",
     "placeholderName": "Ex: Salary, Rental Income",
@@ -194,7 +200,7 @@
     "no-upcoming-payments": "No upcoming payments",
     "income-expense-chart": "Income/Expense Chart",
     "monthly": "Monthly",
-    "yearly": "Yearly", 
+    "yearly": "Yearly",
     "income": "Income",
     "expense": "Expense",
     "balance": "Balance",

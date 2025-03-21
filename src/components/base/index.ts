@@ -39,3 +39,5 @@ export * from './BaseButton';
 export * from './BaseIcon';
 export * from './BaseTabs';
 export * from './BaseTabItem';
+
+export * from './core/index'

@@ -1,5 +1,5 @@
-import { LoadingSpinner } from "@guden-components";
-import { GlobalStateProvider, LoadingProvider } from "@guden-context";
+import { CoreNotification, LoadingSpinner } from "@guden-components";
+import { GlobalStateProvider, LoadingProvider, NotificationProvider } from "@guden-context";
 import { BottomTabNavigator } from "@guden-layout";
 import { ThemeProvider } from "@guden-theme";
 import { useFonts } from "expo-font";
@@ -31,8 +31,11 @@ export default function RootLayout() {
       <LoadingProvider>
         <I18nextProvider i18n={i18n}>
           <GlobalStateProvider>
-            <BottomTabNavigator />
-            <LoadingSpinner />
+            <NotificationProvider>
+              <CoreNotification />
+              <BottomTabNavigator />
+              <LoadingSpinner />
+            </NotificationProvider>
           </GlobalStateProvider>
         </I18nextProvider>
       </LoadingProvider>
