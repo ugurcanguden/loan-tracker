@@ -1,10 +1,10 @@
 import { CoreNotification, LoadingSpinner } from "@guden-components";
 import { GlobalStateProvider, LoadingProvider, NotificationProvider } from "@guden-context";
-import { BottomTabNavigator } from "@guden-layout";
+import { BottomTabNavigator, MenuLayout } from "@guden-layout";
 import { ThemeProvider } from "@guden-theme";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import "react-native-reanimated";
 import i18n from "../locales/i18n";
@@ -16,15 +16,23 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  SplashScreen.preventAutoHideAsync(); // splash otomatik kapanmaz
+
+
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 3000);
     }
   }, [loaded]);
 
   if (!loaded) {
     return null;
   }
+
+
+
 
   return (
     <ThemeProvider>
@@ -33,7 +41,9 @@ export default function RootLayout() {
           <GlobalStateProvider>
             <NotificationProvider>
               <CoreNotification />
-              <BottomTabNavigator />
+              <MenuLayout>
+                <BottomTabNavigator />
+              </MenuLayout>
               <LoadingSpinner />
             </NotificationProvider>
           </GlobalStateProvider>

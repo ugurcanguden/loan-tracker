@@ -6,6 +6,7 @@ import { CoreNotification } from "./core-notification";
 import { CoreSelect } from "./core-select";
 import { CoreText } from "./core-text";
 import { CoreToggle } from "./core-toggle";
+import { CoreView } from "./core-view";
 
 export {
     CoreText,
@@ -15,5 +16,6 @@ export {
     CoreSelect,
     CoreButton,
     CoreToggle,
-    CoreNotification
+    CoreNotification,
+    CoreView
 }

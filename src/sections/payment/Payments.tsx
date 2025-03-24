@@ -18,9 +18,9 @@ import { PaymentService } from "@guden-services";
 import { useThemeContext } from "@guden-theme";
 import { ConvertDateToString, DateFormat } from "guden-core";
 import { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native";
-import PaymentForm from "./PaymentForm";
+import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native"; 
 import PaymentDetailPage from "./payment-detail/PaymentDetail";
+import { PaymentForm } from "./PaymentForm";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 

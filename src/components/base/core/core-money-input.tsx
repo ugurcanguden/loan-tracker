@@ -14,6 +14,7 @@ export interface CoreMoneyInputProps {
   max?: number;
   message?: string;
   placeholder?: string;
+  onChange?: (rawValue: string, numericValue: number) => void; // ✅ Yeni eklendi
 }
 
 export const CoreMoneyInput: React.FC<CoreMoneyInputProps> = ({
@@ -25,6 +26,7 @@ export const CoreMoneyInput: React.FC<CoreMoneyInputProps> = ({
   max,
   message = 'Geçersiz tutar',
   placeholder = '0,00',
+  onChange,
 }) => {
   const { theme } = useThemeContext();
   const { t } = useTranslation();
@@ -32,7 +34,6 @@ export const CoreMoneyInput: React.FC<CoreMoneyInputProps> = ({
   const locale = t('language.locale') || 'tr-TR';
   const currency = t('language.currency') || 'TRY';
 
-  // Kullanıcının gördüğü değer
   const [displayValue, setDisplayValue] = useState('');
 
   const formatNumber = (val: number) => {
@@ -59,8 +60,7 @@ export const CoreMoneyInput: React.FC<CoreMoneyInputProps> = ({
         min: min ? { value: min, message: `${message} (En az ${min})` } : undefined,
         max: max ? { value: max, message: `${message} (En fazla ${max})` } : undefined,
       }}
-      render={({ field: { onChange, value }, fieldState: { error } }) => {
-        // Formdaki değer değiştiğinde inputu yeniden formatla
+      render={({ field: { onChange: formOnChange, value }, fieldState: { error } }) => {
         useEffect(() => {
           if (value) {
             const num = parseFloat(value);
@@ -74,8 +74,13 @@ export const CoreMoneyInput: React.FC<CoreMoneyInputProps> = ({
 
         const handleChangeText = (text: string) => {
           const parsed = parseInput(text);
-          setDisplayValue(formatNumber(Number(parsed)));
-          onChange(parsed);
+          const numericValue = parseFloat(parsed);
+          setDisplayValue(formatNumber(numericValue));
+          formOnChange(parsed);
+
+          if (onChange) {
+            onChange(parsed, numericValue);
+          }
         };
 
         return (

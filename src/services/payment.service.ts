@@ -22,8 +22,7 @@ export const PaymentService = () => {
         payment.description || ""
       );
 
-      const paymentId = result.lastInsertRowId;
-
+      const paymentId = result.lastInsertRowId; 
       // Eğer taksitli ödeme ise, taksit detaylarını hesapla ve ekle
       if (payment.isRecurring === 1 && payment.installments > 0) {
         const monthlyAmount = payment.amount / payment.installments;
@@ -32,7 +31,10 @@ export const PaymentService = () => {
         for (let i = 0; i < payment.installments; i++) {
           const dueDate = new Date(startDate);
           dueDate.setMonth(dueDate.getMonth() + i);
-
+          console.log(paymentId,
+            monthlyAmount.toFixed(2),
+            dueDate.toISOString(),
+            0);
           await db.runAsync(
             `INSERT INTO payment_details (
                             paymentId, 

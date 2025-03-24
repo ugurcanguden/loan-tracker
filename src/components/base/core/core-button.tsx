@@ -4,7 +4,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  View,
   ViewStyle,
+  StyleProp,
 } from 'react-native';
 import { useThemeContext } from '@guden-theme';
 
@@ -17,6 +19,9 @@ interface CoreButtonProps {
   disabled?: boolean;
   variant?: ButtonVariant;
   fullWidth?: boolean;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
+  style?: StyleProp<ViewStyle>; // ✅ style desteği
 }
 
 export const CoreButton: React.FC<CoreButtonProps> = ({
@@ -26,6 +31,9 @@ export const CoreButton: React.FC<CoreButtonProps> = ({
   disabled = false,
   variant = 'primary',
   fullWidth = true,
+  iconLeft,
+  iconRight,
+  style,
 }) => {
   const { theme } = useThemeContext();
 
@@ -79,12 +87,17 @@ export const CoreButton: React.FC<CoreButtonProps> = ({
           width: fullWidth ? '100%' : undefined,
         },
         getBorderStyle(),
+        style, // ✅ dışarıdan gelen stil burada uygulanıyor
       ]}
     >
       {loading ? (
         <ActivityIndicator color={getTextColor()} />
       ) : (
-        <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
+        <View style={styles.content}>
+          {iconLeft && <View style={styles.iconLeft}>{iconLeft}</View>}
+          <Text style={[styles.label, { color: getTextColor() }]}>{label}</Text>
+          {iconRight && <View style={styles.iconRight}>{iconRight}</View>}
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -99,8 +112,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 8,
   },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   label: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  iconLeft: {
+    marginRight: 6,
+  },
+  iconRight: {
+    marginLeft: 6,
   },
 });
