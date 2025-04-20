@@ -11,6 +11,7 @@ import { PaymentsScreen } from '../../app/dashboard/payments';
 import { ReportsScreen } from '../../app/dashboard/reports';
 import { SettingsScreen } from '../../app/dashboard/settings';
 import MenuScreen from './MenuScreen';
+import AddCategoryScreen from '../sections/settings/category/add-category';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +29,8 @@ const getComponent = (componentName: string) => {
       return SettingsScreen;
     case '/settings':
       return ReportsScreen;
+      case '/settings/category/add-category':
+        return AddCategoryScreen;
     default:
       return HomeScreen;
   }
@@ -62,8 +65,17 @@ export function BottomTabNavigator() {
             />
           );
         })}
+        {/* Ayarlar Menüsü */}
+        <Tab.Screen
+          name={getTranslation('menu.settings')}
+          component={SettingsScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="settings-outline" size={size} color={color} />
+            ),
+          }}
+        />
       </Tab.Navigator>
-
       <SettingsButton />
     </View>
   );

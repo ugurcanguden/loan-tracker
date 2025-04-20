@@ -22,7 +22,7 @@ export const PaymentService = () => {
         payment.description || ""
       );
 
-      const paymentId = result.lastInsertRowId; 
+      const paymentId = result.lastInsertRowId;
       // Eğer taksitli ödeme ise, taksit detaylarını hesapla ve ekle
       if (payment.isRecurring === 1 && payment.installments > 0) {
         const monthlyAmount = payment.amount / payment.installments;
@@ -185,32 +185,34 @@ export const PaymentService = () => {
     const db = await getDatabase();
     try {
       let query = `
-        WITH filtered_details AS (
-          SELECT 
-            pd.paymentId,
-            pd.amount,
-            pd.isPaid,
-            pd.dueDate
-          FROM payment_details pd
-          WHERE 1=1
-            ${startDate ? "AND pd.dueDate >= ?" : ""}
-            ${endDate ? "AND pd.dueDate <= ?" : ""}
-        )
+ WITH filtered_details AS (
         SELECT 
-          COUNT(DISTINCT p.id) as totalPayments,
-          SUM(p.amount) as totalAmount,
-          SUM(CASE WHEN p.isRecurring = 1 THEN 1 ELSE 0 END) as recurringPayments,
-          SUM(CASE WHEN p.isRecurring = 0 THEN 1 ELSE 0 END) as oneTimePayments,
-          SUM(CASE WHEN fd.isPaid = 1 THEN fd.amount ELSE 0 END) as totalPaid,
-          SUM(CASE WHEN fd.isPaid = 0 THEN fd.amount ELSE 0 END) as totalRemaining,
-          SUM(CASE 
-            WHEN strftime('%Y-%m', fd.dueDate) = strftime('%Y-%m', 'now') 
-            THEN fd.amount ELSE 0 END) as monthlyPayment,
-          COUNT(CASE 
-            WHEN fd.isPaid = 0 AND fd.dueDate < date('now') 
-            THEN 1 END) as overdueCount
-        FROM payments p
-        INNER JOIN filtered_details fd ON p.id = fd.paymentId;
+          pd.paymentId,
+          pd.amount,
+          pd.isPaid,
+          pd.dueDate
+        FROM payment_details pd
+        WHERE 1=1
+          ${startDate ? "AND pd.dueDate >= ?" : ""}
+          ${endDate ? "AND pd.dueDate <= ?" : ""}
+          ${!startDate && !endDate ? "AND pd.dueDate >= date('now', '-1 year')" : ""}
+      )
+      SELECT 
+        
+        COUNT(DISTINCT p.id) as totalPayments,
+        SUM(fd.amount) as totalAmount,
+        SUM(CASE WHEN p.isRecurring = 1 THEN 1 ELSE 0 END) as recurringPayments,
+        SUM(CASE WHEN p.isRecurring = 0 THEN 1 ELSE 0 END) as oneTimePayments,
+        SUM(CASE WHEN fd.isPaid = 1 THEN fd.amount ELSE 0 END) as totalPaid,
+        SUM(CASE WHEN fd.isPaid = 0 THEN fd.amount ELSE 0 END) as totalRemaining,
+        SUM(CASE 
+          WHEN strftime('%Y-%m', fd.dueDate) = strftime('%Y-%m', 'now') 
+          THEN fd.amount ELSE 0 END) as monthlyPayment,
+        COUNT(CASE 
+          WHEN fd.isPaid = 0 AND fd.dueDate < date('now') 
+          THEN 1 END) as overdueCount
+      FROM payments p
+      LEFT JOIN filtered_details fd ON p.id = fd.paymentId;
       `;
 
       const params: any[] = [];

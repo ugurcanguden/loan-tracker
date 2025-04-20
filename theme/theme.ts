@@ -1,4 +1,4 @@
-import { TextStyle, ViewStyle } from 'react-native';
+import { TextStyle, ViewStyle } from "react-native";
 
 export interface ThemeColors {
   background: string;
@@ -16,6 +16,8 @@ export interface ThemeColors {
   link: string;
   inputBackground: string;
   inputText: string;
+  overlay: string;
+  shadow: string; // ✅ Buraya eklendi
 }
 
 export const spacing = {
@@ -83,6 +85,7 @@ export const shadows = {
 };
 
 export interface Theme extends ThemeColors {
+  overlay: string;
   colors: ThemeColors;
   spacing: typeof spacing;
   borderRadius: typeof borderRadius;
@@ -109,6 +112,8 @@ export const lightTheme: Theme = {
   disabled: '#E9ECEF',
   inputBackground: '#F5F5F5',
   inputText: '#222222',
+  overlay: 'rgba(0,0,0,0.4)',
+  shadow: '#000', // ✅ Light tema için shadow eklendi
   ...commonColors,
   colors: {
     background: '#F8F9FA',
@@ -119,6 +124,8 @@ export const lightTheme: Theme = {
     disabled: '#E9ECEF',
     inputBackground: '#F5F5F5',
     inputText: '#222222',
+    overlay: 'rgba(0,0,0,0.4)',
+    shadow: '#000', // ✅ Light tema için shadow eklendi
     ...commonColors,
   },
   spacing,
@@ -136,6 +143,8 @@ export const darkTheme: Theme = {
   disabled: '#343A40',
   inputBackground: '#1E1E1E',
   inputText: '#FFFFFF',
+  overlay: 'rgba(0,0,0,0.6)',
+  shadow: '#000', // ✅ Dark tema için shadow eklendi
   ...commonColors,
   colors: {
     background: '#212529',
@@ -146,6 +155,8 @@ export const darkTheme: Theme = {
     disabled: '#343A40',
     inputBackground: '#1E1E1E',
     inputText: '#FFFFFF',
+    overlay: 'rgba(0,0,0,0.6)',
+    shadow: '#000', // ✅ Dark tema için shadow eklendi
     ...commonColors,
   },
   spacing,

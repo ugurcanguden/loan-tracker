@@ -2,5 +2,6 @@ import { Colors } from "./Colors";
 import { MENU_ITEMS } from "./menuItems";
 export { 
     Colors,
-    MENU_ITEMS    
+    MENU_ITEMS  
  } 
+ export * from './scripts/index';

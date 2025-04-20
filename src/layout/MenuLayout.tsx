@@ -11,19 +11,17 @@ export const MenuLayout: React.FC<MenuLayoutProps> = ({ children }) => {
   const { theme } = useThemeContext();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.content}>
-        
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={styles.content}> 
         {children}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop:20
+    flex: 1 
   },
   content: {
     flex: 1,

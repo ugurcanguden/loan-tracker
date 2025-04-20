@@ -20,8 +20,7 @@ export function Home() {
 
   return (
     <PageLayout
-      title={getTranslation("home.title")}
-      padding="none"
+      title={getTranslation("home.title")}  
       rightComponent={
         <BaseTouchable
           variant="outline"

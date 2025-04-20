@@ -9,13 +9,14 @@ import {
   CoreDateInput,
   CoreInput,
   CoreMoneyInput,
+  CoreSelect,
   CoreText,
   CoreView,
 } from '@guden-components';
 
 import { useThemeContext } from '@guden-theme';
-import { PaymentService } from '@guden-services';
-import { Payment } from '@guden-models';
+import { PaymentCategoryService, PaymentService } from '@guden-services';
+import { Payment, PaymentCategory } from '@guden-models';
 import { useNotification } from '@guden-hooks';
 import { validatePaymentForm } from '../../utils/validations';
 
@@ -108,9 +109,31 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onClosed }) => {
       notify({ message: t('common.saveError'), type: 'error' });
     }
   };
+  const [categories, setCategories] = useState<PaymentCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categoryService = PaymentCategoryService();
+      const fetchedCategories = await categoryService.getCategories();
+      setCategories(fetchedCategories);
+      console.log(fetchedCategories);
+    }; 
+    fetchCategories();
+  }, []);
   return (
     <CoreView variant="card" padding="md">
+      <CoreSelect
+        label="Kategori Seçin"
+        options={categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))}  
+        control={control}
+        name="categoryId"
+        required
+        message="Kategori seçiniz"
+      />
       <CoreInput
         name="name"
         control={control}
@@ -152,16 +175,14 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onClosed }) => {
       {isRecurring && (
         <CoreView gap="sm">
           <CoreText variant="label">{t('payment.installments')}</CoreText>
-          <View style={styles.installmentContainer}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <CoreButton
               label=""
               variant="ghost"
-              iconLeft={
-                <MaterialCommunityIcons name="minus" size={20} color="#fff" />
-              }
+              iconLeft={<MaterialCommunityIcons name="minus" />}
               onPress={() => handleInstallmentChange(false)}
               disabled={installments <= 1}
-              style={styles.iconButton}
+              style={{ width: "30%" }}
             />
 
             <CoreInput
@@ -171,21 +192,18 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onClosed }) => {
               keyboardType="numeric"
               required
               message={t('payment.installmentsError')}
-              style={styles.installmentInput}
+              style={{ width: "40%" }}
             />
 
             <CoreButton
               label=""
               variant="ghost"
-              iconLeft={
-                <MaterialCommunityIcons name="plus" size={20} color="#fff" />
-              }
+              iconLeft={<MaterialCommunityIcons name="plus" />}
               onPress={() => handleInstallmentChange(true)}
               disabled={installments >= 120}
-              style={styles.iconButton}
+              style={{ width: "30%" }}
             />
           </View>
-
           <CoreView gap="xs">
             <CoreText>
               {t('payment.monthly-payment')}:{' '}
@@ -238,12 +256,6 @@ const styles = StyleSheet.create({
   installmentInput: {
     width: 60,
     textAlign: 'center',
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    padding: 0,
   },
   saveButton: {
     marginTop: 20,

@@ -11,6 +11,8 @@ import {
   BaseDescription,
   DescriptionItemProps,
   PageLayout,
+  CoreModal,
+  PageLayoutProps,
 } from "@guden-components";
 import { BasePage } from "@guden-hooks";
 import { Payment, PaymentSummary } from "@guden-models";
@@ -18,14 +20,16 @@ import { PaymentService } from "@guden-services";
 import { useThemeContext } from "@guden-theme";
 import { ConvertDateToString, DateFormat } from "guden-core";
 import { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native"; 
+import { Alert, Dimensions, ScrollView, StyleSheet } from "react-native";
 import PaymentDetailPage from "./payment-detail/PaymentDetail";
-import { PaymentForm } from "./PaymentForm";
+import { PaymentForm } from "./PaymentForm"; 
+import SummarySection from "./payment-summary";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export default function Payments() {
   const { theme } = useThemeContext();
+  
   const [payments, setPayments] = useState<Payment[]>([]);
   const [summary, setSummary] = useState<PaymentSummary | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,6 +37,7 @@ export default function Payments() {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
+  const [apiCallCount, setApiCallCount] = useState(1);
   const { getPayments, deletePayment, getPaymentSummary } = PaymentService();
   const { getTranslation } = BasePage();
 
@@ -41,6 +46,7 @@ export default function Payments() {
   }, []);
 
   const fetchData = async () => {
+    setApiCallCount(apiCallCount + 1);
     try {
       const paymentsData = await getPayments(
         startDate || undefined,
@@ -50,8 +56,7 @@ export default function Payments() {
         startDate || undefined,
         endDate || undefined
       );
-      setPayments(paymentsData);
-      setSummary(summaryData);
+      setPayments(paymentsData); 
     } catch (error) {
       console.error("Veriler getirilirken hata:", error);
       Alert.alert(
@@ -114,7 +119,7 @@ export default function Payments() {
   const FilterModal = () => (
     <BaseModal
       visible={isFilterModalVisible}
-      onClose={() => { 
+      onClose={() => {
         setIsFilterModalVisible(false);
       }}
       size="large"
@@ -143,7 +148,6 @@ export default function Payments() {
             minDate={startDate || undefined}
           />
         </BaseView>
-
         <BaseView style={styles.filterActions}>
           <BaseTouchable
             variant="outline"
@@ -244,52 +248,6 @@ export default function Payments() {
       </BaseView>
     </BaseTouchable>
   );
-
-  const SummarySection = () => {
-    const summaryItems = [
-      {
-        label: getTranslation("payment.total-amount"),
-        value: summary?.totalAmount || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-paid"),
-        value: summary?.totalPaid || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-remaining"),
-        value: summary?.totalRemaining || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.monthly-payment"),
-        value: summary?.monthlyPayment || 0,
-        isCurrency: true,
-      },
-      {
-        label: getTranslation("payment.total-payments"),
-        value: summary?.totalPayments || 0,
-      },
-      {
-        label: getTranslation("payment.overdue-payments"),
-        value: summary?.overdueCount || 0,
-        textStyle: { color: theme.colors.error },
-      },
-    ];
-
-    return (
-      <BaseView variant="card" padding="medium" style={styles.summaryContainer}>
-        <BaseText variant="title" weight="bold" style={styles.summaryTitle}>
-          {getTranslation("payment.summary")}
-        </BaseText>
-        <BaseDescription
-          items={summaryItems as DescriptionItemProps[]}
-          column={2}
-        />
-      </BaseView>
-    );
-  };
 
   const styles = StyleSheet.create({
     container: {
@@ -402,61 +360,36 @@ export default function Payments() {
       padding: 8,
     },
   });
+ 
 
-  const dynamicStyles = StyleSheet.create({
-    actionButton: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: theme.colors.background,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
+
+  
+//#region component props 
+const pageLayoutProps : PageLayoutProps = {
+  title: getTranslation("payment.title"),
+  showAddButton: true, 
+  onAddPress: handleAddPayment,
+  actions: [
+    {
+      text: getTranslation("payment.filter.title"),
+      onClick: () => setIsFilterModalVisible(true),
+      icon: "filter-outline",
     },
-  });
+    {
+      text: "",
+      onClick: fetchData,
+      icon: "refresh",
+    },
+  ],
+  children: undefined,
+}
+//#endregion
+
 
   return (
-    <PageLayout
-      title={getTranslation("payment.title")}
-      showAddButton
-      onAddPress={handleAddPayment}
-      padding="none"
-    >
+    <PageLayout {...pageLayoutProps}>
       <BaseView style={styles.container}>
-        <BaseView style={styles.headerActions}>
-          <BaseTouchable
-            variant="outline"
-            size="small"
-            style={dynamicStyles.actionButton}
-            onPress={() => {
-              setIsFilterModalVisible(true);
-              setIsModalVisible(false);
-            }}
-          >
-            <MaterialCommunityIcons
-              name="filter-outline"
-              size={24}
-              color={theme.colors.primary}
-            />
-          </BaseTouchable>
-
-          <BaseTouchable
-            variant="outline"
-            size="small"
-            style={dynamicStyles.actionButton}
-            onPress={fetchData}
-          >
-            <MaterialCommunityIcons
-              name="refresh"
-              size={24}
-              color={theme.colors.primary}
-            />
-          </BaseTouchable>
-        </BaseView>
-
-        <SummarySection />
-
+        <SummarySection  apiCallCount={apiCallCount} endDate={endDate} startDate={startDate}/>
         <BaseFlatList
           data={payments}
           keyExtractor={(item) => item.id!.toString()}
@@ -465,33 +398,20 @@ export default function Payments() {
           style={styles.list}
         />
       </BaseView>
-
-      <BaseModal
+      <CoreModal
         visible={isModalVisible}
         onClose={() => {
           setIsModalVisible(false);
           fetchData();
         }}
         size={"large"}
-        closeButtonSize={30}
-        title={
-          selectedPayment
-            ? getTranslation("payment.detailTitle")
-            : getTranslation("payment.addTitle")
-        }
       >
-        <ScrollView
-          style={styles.modalScroll}
-          contentContainerStyle={styles.modalContent}
-        >
-          {selectedPayment ? (
-            <PaymentDetailPage payment={selectedPayment} />
-          ) : (
-            <PaymentForm onClosed={handleSavePayment} />
-          )}
-        </ScrollView>
-      </BaseModal>
-
+        {selectedPayment ? (
+          <PaymentDetailPage payment={selectedPayment} />
+        ) : (
+          <PaymentForm onClosed={handleSavePayment} />
+        )}
+      </CoreModal>
       <FilterModal />
     </PageLayout>
   );
